@@ -866,24 +866,27 @@ They were introduced in React 16.8 and have since become the standard way to bui
 🧠 Why Hooks?
 Before Hooks, if you needed state or lifecycle methods, you had to use class components. Hooks bring that power to function components, which are:
 
-Simpler
-Easier to reuse logic
-Cleaner and more readable
+* Simpler
+* Easier to reuse logic
+* Cleaner and more readable
+
 🔑 Most Common Hooks
+
 Hook	Purpose
-useState	Add state to a function component
-useEffect	Perform side effects (e.g., fetch data, timers)
-useContext	Access context values
-useRef	Create mutable references to DOM or values
-useMemo	Memoize expensive computations
-useCallback	Memoize callbacks
-useReducer	Alternative to useState for complex logic
-useLayoutEffect	Like useEffect, but fires before paint
+
+* useState	Add state to a function component
+* useEffect	Perform side effects (e.g., fetch data, timers)
+* useContext	Access context values
+* useRef	Create mutable references to DOM or values
+* useMemo	Memoize expensive computations
+* useCallback	Memoize callbacks
+* useReducer	Alternative to useState for complex logic
+* useLayoutEffect	Like useEffect, but fires before paint
+
 🧪 Examples
+
 1️⃣ useState – Add State to a Component
-tsx
-Copy
-Edit
+~~~tsx
 import { useState } from "react";
 
 function Counter() {
@@ -895,10 +898,12 @@ function Counter() {
     </button>
   );
 }
+
+~~~
+
 2️⃣ useEffect – Side Effects (like componentDidMount, etc.)
-tsx
-Copy
-Edit
+
+~~~tsx
 import { useEffect, useState } from "react";
 
 function DataFetcher() {
@@ -912,10 +917,11 @@ function DataFetcher() {
 
   return <div>{data ? JSON.stringify(data) : "Loading..."}</div>;
 }
+~~~
+
 3️⃣ useRef – Persistent Value or DOM Access
-tsx
-Copy
-Edit
+
+~~~tsx
 import { useRef, useEffect } from "react";
 
 function InputFocus() {
@@ -927,10 +933,11 @@ function InputFocus() {
 
   return <input ref={inputRef} />;
 }
+~~~
+
 4️⃣ useContext – Read from React Context
-tsx
-Copy
-Edit
+
+~~~tsx
 const ThemeContext = React.createContext("light");
 
 function App() {
@@ -945,17 +952,19 @@ function Toolbar() {
   const theme = React.useContext(ThemeContext);
   return <div>Theme is {theme}</div>;
 }
+~~~
+
 ✅ Rules of Hooks
-Only call Hooks at the top level (not inside loops, conditions, or nested functions).
-Only call Hooks from React function components or custom Hooks.
+
+* Only call Hooks at the top level (not inside loops, conditions, or nested functions).
+* Only call Hooks from React function components or custom Hooks.
 React enforces these rules to make sure your component logic is predictable.
 
 🚀 Custom Hooks
+
 You can build your own hooks to encapsulate and reuse logic:
 
-tsx
-Copy
-Edit
+~~~tsx
 function useToggle(initial = false) {
   const [value, setValue] = useState(initial);
   const toggle = () => setValue(v => !v);
@@ -964,18 +973,22 @@ function useToggle(initial = false) {
 
 // Usage
 const [isOpen, toggleOpen] = useToggle();
+~~~
+
 🧠 Summary
+
 Feature	Hooks Equivalent
-State	useState
-Lifecycle	useEffect
-Refs	useRef
-Context	useContext
-Memoization	useMemo, useCallback
-Complex state	useReducer
+* State	useState
+* Lifecycle	useEffect
+* Refs	useRef
+* Context	useContext
+* Memoization	useMemo, useCallback
+* Complex state	useReducer
+
 Hooks make your React components: ✅ Simpler
-✅ Easier to test
-✅ More composable
-✅ More powerful (without classes)
+* ✅ Easier to test
+* ✅ More composable
+* ✅ More powerful (without classes)
 
 Want a live-coded example? Or help converting a class component to hooks?
 
