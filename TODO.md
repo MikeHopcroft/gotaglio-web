@@ -4,10 +4,12 @@
 * x Create github repo
 * x License
 * Backend
-  * .gitignore
+  * x .gitignore
+  * x Rest client
+  * x FastAPI, uvcorn, pydantic, sqlalchemy
 * Frontend
   * .gitignore
   * vite
   * gts
 * VSCode extensions
-  * Rest client (curl)
+  * x Rest client (curl)

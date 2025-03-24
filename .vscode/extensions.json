@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "humao.rest-client",
+    "ms-python.black-formatter",
+    "dbaeumer.vscode-eslint",
+    "yzhang.markdown-all-in-one",
+    "esbenp.prettier-vscode",
+    "ms-python.vscode-pylance",
+    "ms-python.python",
+    "ms-python.debugpy"
+  ]
+}
