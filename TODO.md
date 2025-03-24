@@ -8,8 +8,9 @@
   * x Rest client
   * x FastAPI, uvcorn, pydantic, sqlalchemy
 * Frontend
-  * .gitignore
-  * vite
+  * .gitignore - made by vite - consider https://github.com/github/gitignore/blob/main/Node.gitignore
+  * x vite
+  * Configure Vite to build into FastAPI's static folder
   * gts
 * VSCode extensions
   * x Rest client (curl)
