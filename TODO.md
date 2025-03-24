@@ -1,8 +1,8 @@
 # TODO
 
-* Create repo
-* Create github repo
-* License
+* x Create repo
+* x Create github repo
+* x License
 * Backend
   * .gitignore
 * Frontend
