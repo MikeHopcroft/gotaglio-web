@@ -12,7 +12,7 @@ function SuiteLayout() {
   return (
     <div className="h-screen flex flex-col">
       {/* Navbar */}
-      <div className="h-16 bg-gray-800 text-white flex items-center px-4 shadow-md">
+      <div className="h-16 bg-red-800 text-white flex items-center px-4 shadow-md">
         <h1 className="text-xl font-bold">My App</h1>
       </div>
 
@@ -22,6 +22,9 @@ function SuiteLayout() {
         <div className="w-64 bg-gray-100 p-4 overflow-y-auto">
           <p>Sidebar content</p>
           {/* Add enough content to test scrolling */}
+          {Array.from({ length: 100 }, (_, index) => (
+          <div key={index}>Div {index + 1}</div>
+          ))}
         </div>
 
         {/* Main Content */}
