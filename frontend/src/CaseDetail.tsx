@@ -6,8 +6,7 @@ function CaseDetail() {
 
   return (
     <div>
-      <h3>Case Detail</h3>
-      <p>Viewing case: {caseId}</p>
+      <h3>Case {caseId}</h3>
     </div>
   );
 }

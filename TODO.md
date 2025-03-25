@@ -11,8 +11,8 @@
   * .gitignore - made by vite - consider https://github.com/github/gitignore/blob/main/Node.gitignore
   * x vite
   * Configure Vite to build into FastAPI's static folder
-  * gts
-  * Fix `npm run compile` - errors in node_modules
+  * x gts
+  * x Fix `npm run compile` - errors in node_modules
   * Fix .eslintrc.json
 * VSCode extensions
   * x Rest client (curl)
@@ -23,6 +23,7 @@
     * Autocomplete suite finder/switcher
   * Sidebar
     * Shows cases in current suite
+    * Button to add new case at bottom
     * Autocomplete case finder
     * Selected case highlighted
     * Drag/drop ordering

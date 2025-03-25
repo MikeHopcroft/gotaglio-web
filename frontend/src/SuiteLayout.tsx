@@ -4,10 +4,10 @@ import { NavLink, Outlet, useParams, Link } from 'react-router-dom';
 function SuiteLayout() {
   const { suiteId } = useParams();
 
-  const cases = [
-    { id: 'case1', name: 'Login Test' },
-    { id: 'case2', name: 'Signup Test' },
-  ];
+
+  const cases = Array.from({ length: 100 }, (_, index) => {
+    return { id: `case${index + 1}`, name: `Test Case ${index + 1}` };
+  });
 
   return (
     <div className="h-screen flex flex-col">
@@ -20,16 +20,27 @@ function SuiteLayout() {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <div className="w-64 bg-gray-100 p-4 overflow-y-auto">
-          <p>Sidebar content</p>
+          <h2>Suite: {suiteId}</h2>
           {/* Add enough content to test scrolling */}
-          {Array.from({ length: 100 }, (_, index) => (
-          <div key={index}>Div {index + 1}</div>
+          {cases.map(x => (
+            <div key={x.id}>
+              <NavLink to={`case/${x.id}`} className={({ isActive }) =>
+                 isActive
+                   ? 'active'
+                   : 'inactive'
+               }>{x.name}</NavLink>
+
+            </div>
           ))}
+          {/* {Array.from({ length: 100 }, (_, index) => (
+          <div key={index}>Div {index + 1}</div>
+          ))} */}
         </div>
 
         {/* Main Content */}
         <div className="flex-1 p-4 overflow-y-auto bg-white">
-          <p>Main content area that scrolls</p>
+          <Outlet/>
+          {/* <p>Main content area that scrolls</p> */}
           {/* Add content here to test scrolling */}
         </div>
       </div>
