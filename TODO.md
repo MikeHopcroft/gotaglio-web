@@ -1,5 +1,7 @@
 # TODO
 
+* Upgrade node
+* Consider nvm
 * x Create repo
 * x Create github repo
 * x License
@@ -8,6 +10,8 @@
   * x Rest client
   * x FastAPI, uvcorn, pydantic, sqlalchemy
 * Frontend
+  * CaseEditor
+    * Hybrid resolver: zod and web service
   * .gitignore - made by vite - consider https://github.com/github/gitignore/blob/main/Node.gitignore
   * x vite
   * Configure Vite to build into FastAPI's static folder
@@ -51,7 +55,28 @@
       * Can we leave multiple cases in edited state?
         * Or do we have to save before switching suites/cases
 
+* Projects can have names
+  * In many cases one can find the suite of interest without inspecting the project
+  * The project is mainly needed for editing metadata
+* Annotations likely have names, but the names are scoped to the project
+  * Why can't annotations be shared by multiple projects?
+  * Why do annotations even need to be associated with projects.
+  * Seems that tasks/sessions are associated with (Project, Annotation, Template)
+* Suites should probably have ids as many can be created, some by code
+* Cases should have ids
 
+* Projects
+  * Project
+    * Suites
+      * Suite
+        * Metadata
+        * Cases
+          * Case
+            * Metadata
+            * Turns
+    * Annotations (Project, Annotation schema)
+    * Runs (Project/Suite => RunLog)
+    * Tasks/Jobs/Sessions (Project, Annotation, Template, Runlog)
 
 
 npm WARN EBADENGINE Unsupported engine {
