@@ -1,10 +1,10 @@
 {
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
-    "rootDir": ".",
+    "lib": ["dom", "esnext"],
     "outDir": "build",
-    "lib": ["DOM"]
-  },
+    "rootDir": ".",
+},
   "include": [
     "src/**/*.ts",
     "test/**/*.ts"
