@@ -1,6 +1,31 @@
 # TODO
 
-* Upgrade node
+Top
+* . Sample suite data structure
+* . Mock backend
+* Better names
+  * SuiteHome
+  * SuiteLayout
+  * SuitePage
+  * CaseDetail - detail pane has title and holds CaseEditor
+  * CaseEditor - editing form
+* Suite
+  * metadata edit at suite/id
+  * case list
+    * remove button
+    * add button
+* Case
+  * edit at suite/id1/case/id2
+  * remove button
+  * commit button
+  * cancel button
+  * confirm navigation dialog -useBlocker
+  * Turn
+    * remove button
+    * add turn button
+* Undo framework
+
+* x Upgrade node
 * Consider nvm
 * x Create repo
 * x Create github repo

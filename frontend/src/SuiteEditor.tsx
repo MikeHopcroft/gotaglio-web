@@ -1,32 +1,39 @@
+// import React from "react";
+
+// function SuiteHome() {
+//   return <p>Select a case on the left to view details.</p>;
+// }
+
+// export default SuiteHome;
+
+
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 
 // 🧠 Define the form schema
-const caseSchema = z.object({
-  uuid: z.string().min(1, "uuid is required"),
-  // title: z.string().min(1, "Title is required"),
+const suiteSchema = z.object({
+  name: z.string().min(1, "name is required"),
   description: z.string().optional(),
-  // priority: z.enum(["Low", "Medium", "High"]),
 });
 
-type CaseFormData = z.infer<typeof caseSchema>;
+type SuiteFormData = z.infer<typeof suiteSchema>;
 
 type Props = {
-  initialData?: Partial<CaseFormData>;
-  onSave: (data: CaseFormData) => void;
+  initialData?: Partial<SuiteFormData>;
+  onSave: (data: SuiteFormData) => void;
 };
 
-export function CaseEditor({ initialData, onSave }: Props) {
+function SuiteEditor({ initialData, onSave }: Props) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CaseFormData>({
-    resolver: zodResolver(caseSchema),
+  } = useForm<SuiteFormData>({
+    resolver: zodResolver(suiteSchema),
     defaultValues: {
-      uuid: initialData?.uuid || "",
+      name: initialData?.name || "",
       description: initialData?.description || "",
       // priority: initialData?.priority || "Medium",
     },
@@ -38,13 +45,13 @@ export function CaseEditor({ initialData, onSave }: Props) {
       className="space-y-4 bg-white p-6 rounded shadow"
     >
       <div>
-        <label className="block text-sm font-medium mb-1">UUID</label>
+        <label className="block text-sm font-medium mb-1">name</label>
         <input
-          {...register("uuid")}
+          {...register("name")}
           className="w-full border border-gray-300 p-2 rounded"
         />
-        {errors.uuid && (
-          <p className="text-red-500 text-sm mt-1">{errors.uuid.message}</p>
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
         )}
       </div>
 
@@ -57,18 +64,6 @@ export function CaseEditor({ initialData, onSave }: Props) {
         />
       </div>
 
-      {/* <div>
-        <label className="block text-sm font-medium mb-1">Priority</label>
-        <select
-          {...register("priority")}
-          className="w-full border border-gray-300 p-2 rounded"
-        >
-          <option value="Low">Low</option>
-          <option value="Medium">Medium</option>
-          <option value="High">High</option>
-        </select>
-      </div> */}
-
       <div className="text-right">
         <button
           type="submit"
@@ -80,3 +75,5 @@ export function CaseEditor({ initialData, onSave }: Props) {
     </form>
   );
 }
+
+export default SuiteEditor;

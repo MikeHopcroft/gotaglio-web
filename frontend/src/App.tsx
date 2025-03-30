@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css'
 
 import CaseDetail from './CaseDetail';
-import SuiteHome from './SuiteHome';
+import SuiteDetail from './SuiteDetail';
 import SuiteLayout from './SuiteLayout';
 
 function App() {
@@ -12,9 +12,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/suite/:suiteId" element={<SuiteLayout />}>
-          <Route index element={<SuiteHome />} />
+          <Route index element={<SuiteDetail />} />
           <Route path="case/:caseId" element={<CaseDetail />} />
         </Route>
+        <Route index element={<h1>Default route</h1>}/>
       </Routes>
     </BrowserRouter>
 
