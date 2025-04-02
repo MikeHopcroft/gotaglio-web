@@ -1,6 +1,11 @@
 # TODO
 
 Top
+* Detecting and handling merge conflicts
+* Are names scoped, e.g. suite names scoped to projects, case uuids scoped to suites?
+  * If not, can we use a flat URL structure?
+  * Probably not because the sidebar and navbar show the suite and project context.
+  * Should the sidebar just be a three-level tree of project -> suites -> cases?
 * . Sample suite data structure
 * . Mock backend
 * Better names
