@@ -69,47 +69,91 @@ export default function RecordEditor() {
         onSubmit={handleSubmit(onSubmit)}
         className="p-4 max-w-xl mx-auto space-y-4"
       >
-        <div>
-          <textarea
-        className="border px-2 py-1 rounded w-full"
-        {...control.register('initial')}
-        placeholder="Initial context"
-        rows={3}
-          />
-          <label className="text-xs text-gray-500">Initial context</label>
+        <label className="text-xs text-gray-500 mt-1 block m-0">
+          Initial context
+        </label>
+        <div className="flex space-x-2 items-start">
+          <div className="flex-1">
+            <textarea
+              className="border px-2 py-1 rounded w-full m-0"
+              {...control.register('initial')}
+              placeholder="Initial context"
+              rows={3}
+            />
+          </div>
+
+          <div className="flex flex-col space-y-1 w-[100px] shrink-0">
+            <button
+              type="button"
+              className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+            >
+              Validate
+            </button>
+            <button
+              type="button"
+              className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+            >
+              LLM
+            </button>
+          </div>
         </div>
+
         {fields.map((field, index) => (
-          <div
-        key={field.id}
-        className="border p-4 rounded space-y-2"
-          >
-        <div>
-          <textarea
-            className="border px-2 py-1 rounded w-full"
-            {...control.register(`turns.${index}.user` as const)}
-            placeholder="User query"
-            rows={3}
-          />
-          <label className="text-xs text-gray-500">User query</label>
-        </div>
-        <div>
-          <textarea
-            className="border px-2 py-1 rounded w-full"
-            {...control.register(`turns.${index}.agent` as const)}
-            placeholder="Response"
-            rows={3}
-          />
-          <label className="text-xs text-gray-500">Response</label>
-        </div>
-        <button
-          type="button"
-          className="text-red-500 hover:underline"
-          onClick={() => remove(index)}
-        >
-          Delete Turn
-        </button>
+          <div key={field.id} className="border p-4 rounded space-y-2">
+            {/* User Query section */}
+            <label className="text-xs text-gray-500 mt-1 block m-0">
+              User query
+            </label>
+            <div className="flex space-x-2 items-start">
+              <div className="flex-1">
+                <textarea
+                  className="border px-2 py-1 rounded w-full m-0"
+                  {...control.register(`turns.${index}.user` as const)}
+                  placeholder="User query"
+                  rows={3}
+                />
+              </div>
+              {/* Invisible spacer to match button width */}
+              <div className="w-[100px] shrink-0" />
+            </div>
+
+            {/* Response section */}
+            <label className="text-xs text-gray-500">Response</label>
+            <div className="flex space-x-2 items-start">
+              <div className="flex-1">
+                <textarea
+                  className="border px-2 py-1 rounded w-full"
+                  {...control.register(`turns.${index}.agent` as const)}
+                  placeholder="Response"
+                  rows={3}
+                />
+              </div>
+              <div className="flex flex-col space-y-1 w-[100px] shrink-0">
+                <button
+                  type="button"
+                  className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+                >
+                  Validate
+                </button>
+                <button
+                  type="button"
+                  className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+                >
+                  LLM
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="text-red-500 hover:underline"
+              onClick={() => remove(index)}
+            >
+              Delete Turn
+            </button>
           </div>
         ))}
+
         <button
           type="button"
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"

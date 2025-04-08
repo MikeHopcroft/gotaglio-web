@@ -1,6 +1,12 @@
 # TODO
 
 Top
+* Wireframe
+  * Loading UI for LLM textarea
+  * LLM call
+  * Validate call
+  * Validation error
+  * Drag/drop to reorder turns
 * Detecting and handling merge conflicts
 * Are names scoped, e.g. suite names scoped to projects, case uuids scoped to suites?
   * If not, can we use a flat URL structure?
