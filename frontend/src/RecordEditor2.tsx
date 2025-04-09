@@ -1,3 +1,8 @@
+import {
+  ChatBubbleLeftEllipsisIcon,
+  ClipboardDocumentCheckIcon,
+  TrashIcon,
+} from '@heroicons/react/24/solid';
 import get from 'lodash/get';
 import React, {useEffect, useRef} from 'react';
 import {
@@ -19,6 +24,8 @@ type Turn = {
 const STORAGE_KEY = 'my-records';
 
 type FormValues = {
+  description: string;
+  keywords: string[];
   initial: string;
   turns: Turn[];
 };
@@ -81,6 +88,20 @@ export default function RecordEditor() {
           className="p-4 max-w-xl mx-auto space-y-4"
         >
           <label className="text-xs text-gray-500 mt-1 block m-0">
+            Description
+          </label>
+          <div className="flex space-x-2 items-start">
+            <div className="flex-1">
+              <textarea
+                className="border px-2 py-1 rounded w-full m-0"
+                {...control.register('description')}
+                placeholder="Description"
+                rows={3}
+              />
+            </div>
+          </div>
+
+          <label className="text-xs text-gray-500 mt-1 block m-0">
             Initial context
           </label>
           <div className="flex space-x-2 items-start">
@@ -110,7 +131,17 @@ export default function RecordEditor() {
           </div>
 
           {fields.map((field, index) => (
-            <div key={field.id} className="border p-4 rounded space-y-2">
+            <div
+              key={field.id}
+              className="relative border p-4 rounded space-y-2"
+            >
+              <button
+                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                onClick={() => remove(index)}
+                title="Delete turn"
+              >
+                <TrashIcon className="size-6 text-blue-500" />
+              </button>
               {/* User Query section */}
               <label className="text-xs text-gray-500 mt-1 block m-0">
                 User query
@@ -127,17 +158,8 @@ export default function RecordEditor() {
                 {/* Invisible spacer to match button width */}
                 <div className="w-[100px] shrink-0" />
               </div>
-
               {/* Response section */}
               <ValidatedField<FormValues> path={`turns.${index}.agent`} />
-
-              <button
-                type="button"
-                className="text-red-500 hover:underline"
-                onClick={() => remove(index)}
-              >
-                Delete Turn
-              </button>
             </div>
           ))}
 
@@ -234,16 +256,19 @@ function ValidatedField<FormValues extends FieldValues>({
         <div className="flex flex-col space-y-1 w-[100px] shrink-0">
           <button
             type="button"
-            className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+            className="w-fit bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+            title="Validate field"
           >
-            Validate
+            <ClipboardDocumentCheckIcon className="size-6 text-blue-500" />
           </button>
           <button
             type="button"
-            className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+            className="w-fit bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
             onClick={() => onGuess(path)}
+            title="Fill with LLM response"
           >
-            {loading ? 'Loading...' : 'LLM'}
+            <ChatBubbleLeftEllipsisIcon className="size-6 text-blue-500" />
+            {/* {loading ? 'Loading...' : 'LLM'} */}
           </button>
         </div>
       </div>
