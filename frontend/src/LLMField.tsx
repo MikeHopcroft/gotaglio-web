@@ -65,7 +65,7 @@ export default function LLMField<FormValues extends FieldValues>({
         <div className="flex-1">
           <textarea
             className={`border px-2 py-1 rounded w-full ${
-              loading ? 'bg-gray-100 text-gray-500' : ''
+              loading ? 'bg-gray-100 text-gray-500' : 'bg-white'
             }`}
             {...register(path)}
             placeholder="Response"

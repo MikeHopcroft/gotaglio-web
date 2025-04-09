@@ -1,9 +1,12 @@
-import {ClipboardDocumentCheckIcon} from '@heroicons/react/24/solid';
-import {TrashIcon} from '@heroicons/react/24/solid';
+import {
+  ClipboardDocumentCheckIcon,
+  PlusCircleIcon,
+  TrashIcon,
+} from '@heroicons/react/24/solid';
 import React, {useEffect, useRef} from 'react';
-import {useForm, useFormContext, useFieldArray, FormProvider} from 'react-hook-form';
+import {useForm, useFieldArray, FormProvider} from 'react-hook-form';
 
-import KeywordsField from './KeywordsField';
+import KeywordsField from './KeywordsField2';
 import LLMField from './LLMField';
 
 type Turn = {
@@ -80,7 +83,7 @@ export default function RecordEditor() {
   return (
     <>
       <div className="p-4 max-w-xl mx-auto space-y-4">
-        <h1 className="text-2xl font-bold">Case {watch("id")}</h1>
+        <h1 className="text-2xl font-bold">Case {watch('id')}</h1>
         <button
           className="absolute top-2 right-2 text-red-500 hover:text-red-700"
           onClick={() => alert('Delete case')}
@@ -131,7 +134,7 @@ export default function RecordEditor() {
               />
             </div>
 
-            <div className="flex flex-col space-y-1 w-[100px] shrink-0">
+            <div className="flex flex-col space-y-1 w-[50px] shrink-0">
               <button
                 type="button"
                 className="w-fit bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
@@ -145,7 +148,7 @@ export default function RecordEditor() {
           {fields.map((field, index) => (
             <div
               key={field.id}
-              className="relative border p-4 rounded space-y-2"
+              className="relative border bg-gray-100 p-4 rounded space-y-2"
             >
               <button
                 className="absolute top-2 right-2 text-red-500 hover:text-red-700"
@@ -161,7 +164,7 @@ export default function RecordEditor() {
               <div className="flex space-x-2 items-start">
                 <div className="flex-1">
                   <textarea
-                    className="border px-2 py-1 rounded w-full m-0"
+                    className="border px-2 py-1 rounded w-full m-0 bg-white"
                     {...control.register(`turns.${index}.user` as const)}
                     placeholder="User query"
                     rows={3}
@@ -177,12 +180,14 @@ export default function RecordEditor() {
 
           <button
             type="button"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            // className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="w-fit bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+            title="Add turn"
             onClick={() =>
               append({id: crypto.randomUUID(), user: '', agent: ''})
             }
           >
-            Add Turn
+            <PlusCircleIcon  className="size-6 text-blue-500" />
           </button>
           <button
             type="submit"

@@ -4,17 +4,19 @@ Top
 * Wireframe
   * Delete case
   * Keywords
-    * react-tag-autocomplete
-    * react-select creatable
+    * x styling
+    * . list of suggested tags
+    * x react-tag-autocomplete
+    * x react-select creatable
     * duplicates
     * sort order
-  * Factor out components
+  * x Factor out components
   * x Loading UI for LLM textarea
   * . LLM call
   * Validate call
     * Debounce on change
     * Reformat with JSON.stringify
-  * Delete button becomes 'x' in upper right
+  * x Delete button becomes 'x' in upper right
   * Validation error
   * Drag/drop to reorder turns
 * Detecting and handling merge conflicts
