@@ -2,9 +2,12 @@
 
 Top
 * Wireframe
-  * Loading UI for LLM textarea
-  * LLM call
+  * x Loading UI for LLM textarea
+  * . LLM call
   * Validate call
+    * Debounce on change
+    * Reformat with JSON.stringify
+  * Delete button becomes 'x' in upper right
   * Validation error
   * Drag/drop to reorder turns
 * Detecting and handling merge conflicts
