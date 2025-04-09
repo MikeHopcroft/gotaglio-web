@@ -1,21 +1,10 @@
-import {
-  ChatBubbleLeftEllipsisIcon,
-  ClipboardDocumentCheckIcon,
-  TrashIcon,
-} from '@heroicons/react/24/solid';
-import get from 'lodash/get';
+import {ClipboardDocumentCheckIcon} from '@heroicons/react/24/solid';
+import {TrashIcon} from '@heroicons/react/24/solid';
 import React, {useEffect, useRef} from 'react';
-import {
-  Controller,
-  useForm,
-  useFormContext,
-  useFieldArray,
-  useWatch,
-  FieldValues,
-  FormProvider,
-  Path,
-  PathValue,
-} from 'react-hook-form';
+import {useForm, useFormContext, useFieldArray, FormProvider} from 'react-hook-form';
+
+import KeywordsField from './KeywordsField';
+import LLMField from './LLMField';
 
 type Turn = {
   id: string;
@@ -26,6 +15,7 @@ type Turn = {
 const STORAGE_KEY = 'my-records';
 
 type FormValues = {
+  id: string;
   description: string;
   keywords: string[];
   initial: string;
@@ -34,8 +24,13 @@ type FormValues = {
 
 export default function RecordEditor() {
   const methods = useForm<FormValues>({
-    defaultValues: {keywords: [], turns: []},
+    defaultValues: {
+      id: '19be50c2-a332-40d7-828e-5ba51a4016b5',
+      keywords: [],
+      turns: [],
+    },
   });
+
   const {control, handleSubmit, reset, watch} = methods;
   const {fields, append, remove} = useFieldArray<FormValues>({
     control,
@@ -70,6 +65,7 @@ export default function RecordEditor() {
       console.log(
         `[${new Date().toLocaleTimeString()}]: Saving data to localStorage`,
       );
+      // value.id = '19be50c2-a332-40d7-828e-5ba51a4016b5';
       const raw = JSON.stringify(value, null, 2);
       console.log(raw);
       localStorage.setItem(STORAGE_KEY, raw);
@@ -83,7 +79,17 @@ export default function RecordEditor() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold">Case 123456789</h1>
+      <div className="p-4 max-w-xl mx-auto space-y-4">
+        <h1 className="text-2xl font-bold">Case {watch("id")}</h1>
+        <button
+          className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+          onClick={() => alert('Delete case')}
+          title="Delete case"
+        >
+          <TrashIcon className="size-6 text-blue-500" />
+        </button>
+      </div>
+
       <FormProvider {...methods}>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -108,27 +114,7 @@ export default function RecordEditor() {
           </label>
           <div className="flex space-x-2 items-start">
             <div className="flex-1">
-            <CommaKeywordsField path="keywords"/>
-              {/* <Controller
-                name="keywords"
-                control={control}
-                render={({field}) => (
-                  <input
-                    type="text"
-                    value={field.value.join(', ')}
-                    onChange={e => {
-                      const input = e.target.value;
-                      const keywords = input
-                        .split(',')
-                        .map(s => s.trim())
-                        .filter(s => s !== ''); // Remove empty strings
-                      field.onChange(keywords);
-                    }}
-                    className="mt-1 block w-full border rounded px-3 py-2"
-                    placeholder="e.g. dog, cat, rabbit"
-                  />
-                )}
-              /> */}
+              <KeywordsField path="keywords" />
             </div>
           </div>
 
@@ -148,15 +134,10 @@ export default function RecordEditor() {
             <div className="flex flex-col space-y-1 w-[100px] shrink-0">
               <button
                 type="button"
-                className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+                className="w-fit bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+                title="Validate field"
               >
-                Validate
-              </button>
-              <button
-                type="button"
-                className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
-              >
-                LLM
+                <ClipboardDocumentCheckIcon className="size-6 text-blue-500" />
               </button>
             </div>
           </div>
@@ -190,7 +171,7 @@ export default function RecordEditor() {
                 <div className="w-[100px] shrink-0" />
               </div>
               {/* Response section */}
-              <ValidatedField<FormValues> path={`turns.${index}.agent`} />
+              <LLMField<FormValues> path={`turns.${index}.agent`} />
             </div>
           ))}
 
@@ -212,152 +193,5 @@ export default function RecordEditor() {
         </form>
       </FormProvider>
     </>
-  );
-}
-
-// type GuessField<F extends FieldValues> = (
-//   path: Path<F>,
-// ) => Promise<string | Error>;
-
-type ValidatedFieldProps<FormValues extends FieldValues> = {
-  // guess: GuessField<FormValues>;
-  path: Path<FormValues>;
-};
-
-function ValidatedField<FormValues extends FieldValues>({
-  path,
-}: ValidatedFieldProps<FormValues>) {
-  const [loading, setLoading] = React.useState(false);
-
-  const {
-    clearErrors,
-    formState: {errors},
-    register,
-    setError,
-    setValue,
-  } = useFormContext<FormValues>();
-
-  const error = get(errors, path);
-
-  async function onGuess(path: Path<FormValues>) {
-    setLoading(true);
-    clearErrors(path);
-
-    try {
-      // Simulate an async API call
-      const response = await new Promise<string>((resolve, reject) =>
-        setTimeout(() => {
-          if (Math.random() > 0.2) {
-            resolve(`Generated response for ${path}`);
-          } else {
-            reject(new Error('Failed to fetch response from LLM'));
-          }
-        }, 2000),
-      );
-      // Update the agent field with the response
-      setValue(path, response as PathValue<FormValues, Path<FormValues>>, {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
-    } catch (error) {
-      console.error('Error:', error);
-      setError(path, error.message || 'Unknown error');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <>
-      {/* Response section */}
-      <label className="text-xs text-gray-500">Response</label>
-      <div className="flex space-x-2 items-start">
-        <div className="flex-1">
-          <textarea
-            className={`border px-2 py-1 rounded w-full ${
-              loading ? 'bg-gray-100 text-gray-500' : ''
-            }`}
-            {...register(path)}
-            placeholder="Response"
-            rows={3}
-            disabled={loading}
-          />
-          {error && <div className="text-red-500">Error text</div>}
-        </div>
-        <div className="flex flex-col space-y-1 w-[100px] shrink-0">
-          <button
-            type="button"
-            className="w-fit bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
-            title="Validate field"
-          >
-            <ClipboardDocumentCheckIcon className="size-6 text-blue-500" />
-          </button>
-          <button
-            type="button"
-            className="w-fit bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
-            onClick={() => onGuess(path)}
-            title="Fill with LLM response"
-          >
-            <ChatBubbleLeftEllipsisIcon className="size-6 text-blue-500" />
-            {/* {loading ? 'Loading...' : 'LLM'} */}
-          </button>
-        </div>
-      </div>
-    </>
-  );
-}
-
-// function CommaKeywordsField({ path }: { path: string }) {
-//   const { setValue, getValues } = useFormContext();
-//   const initial = (getValues(path) ?? []).join(", ");
-//   const [inputValue, setInputValue] = React.useState(initial);
-
-//   return (
-//     <input
-//       type="text"
-//       value={inputValue}
-//       onChange={(e) => setInputValue(e.target.value)}
-//       onBlur={() => {
-//         const keywords = inputValue
-//           .split(",")
-//           .map((s) => s.trim())
-//           .filter(Boolean);
-//         setValue(path, keywords, { shouldValidate: true });
-//       }}
-//       className="block w-full border rounded px-3 py-2"
-//       placeholder="e.g. apple, banana, cherry"
-//     />
-//   );
-// }
-
-export function CommaKeywordsField({ path }: { path: string }) {
-  const { setValue, control } = useFormContext();
-
-  // Watch the array value from the form state
-  const watchedValue = useWatch({ control, name: path }) ?? [];
-
-  // Local string state for the input
-  const [inputValue, setInputValue] = React.useState(watchedValue.join(", "));
-
-  // Sync inputValue when the form field changes (e.g. on reset)
-  useEffect(() => {
-    setInputValue(watchedValue.join(", "));
-  }, [watchedValue.join(", ")]); // dependency as string to avoid unnecessary updates
-
-  return (
-    <input
-      type="text"
-      value={inputValue}
-      onChange={(e) => setInputValue(e.target.value)}
-      onBlur={() => {
-        const keywords = inputValue
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean);
-        setValue(path, keywords, { shouldValidate: true });
-      }}
-      className="block w-full border rounded px-3 py-2"
-      placeholder="e.g. apple, banana, cherry"
-    />
   );
 }

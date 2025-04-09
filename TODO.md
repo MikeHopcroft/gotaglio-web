@@ -2,6 +2,7 @@
 
 Top
 * Wireframe
+  * Delete case
   * Keywords
     * react-tag-autocomplete
     * react-select creatable
