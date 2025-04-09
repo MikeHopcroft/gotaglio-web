@@ -6,7 +6,7 @@ import {
 import React, {useEffect, useRef} from 'react';
 import {useForm, useFieldArray, FormProvider} from 'react-hook-form';
 
-import KeywordsField from './KeywordsField2';
+import KeywordsField from './KeywordsField';
 import LLMField from './LLMField';
 
 type Turn = {
@@ -68,7 +68,6 @@ export default function RecordEditor() {
       console.log(
         `[${new Date().toLocaleTimeString()}]: Saving data to localStorage`,
       );
-      // value.id = '19be50c2-a332-40d7-828e-5ba51a4016b5';
       const raw = JSON.stringify(value, null, 2);
       console.log(raw);
       localStorage.setItem(STORAGE_KEY, raw);
@@ -180,7 +179,6 @@ export default function RecordEditor() {
 
           <button
             type="button"
-            // className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
             className="w-fit bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
             title="Add turn"
             onClick={() =>

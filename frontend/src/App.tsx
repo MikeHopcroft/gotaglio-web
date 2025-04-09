@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css'
 
 import CaseDetail from './CaseDetail';
-import RecordEditor from './RecordEditor2';
+import RecordEditor from './RecordEditor';
 import SuiteDetail from './SuiteDetail';
 import SuiteLayout from './SuiteLayout';
 
@@ -20,7 +20,6 @@ function App() {
         <Route index element={<h1>Default route</h1>}/>
       </Routes>
     </BrowserRouter>
-
   )
 }
 
