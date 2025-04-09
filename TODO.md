@@ -2,6 +2,12 @@
 
 Top
 * Wireframe
+  * Keywords
+    * react-tag-autocomplete
+    * react-select creatable
+    * duplicates
+    * sort order
+  * Factor out components
   * x Loading UI for LLM textarea
   * . LLM call
   * Validate call

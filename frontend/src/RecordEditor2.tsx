@@ -6,9 +6,11 @@ import {
 import get from 'lodash/get';
 import React, {useEffect, useRef} from 'react';
 import {
+  Controller,
   useForm,
   useFormContext,
   useFieldArray,
+  useWatch,
   FieldValues,
   FormProvider,
   Path,
@@ -32,7 +34,7 @@ type FormValues = {
 
 export default function RecordEditor() {
   const methods = useForm<FormValues>({
-    defaultValues: {turns: []},
+    defaultValues: {keywords: [], turns: []},
   });
   const {control, handleSubmit, reset, watch} = methods;
   const {fields, append, remove} = useFieldArray<FormValues>({
@@ -98,6 +100,35 @@ export default function RecordEditor() {
                 placeholder="Description"
                 rows={3}
               />
+            </div>
+          </div>
+
+          <label className="text-xs text-gray-500 mt-1 block m-0">
+            Keywords
+          </label>
+          <div className="flex space-x-2 items-start">
+            <div className="flex-1">
+            <CommaKeywordsField path="keywords"/>
+              {/* <Controller
+                name="keywords"
+                control={control}
+                render={({field}) => (
+                  <input
+                    type="text"
+                    value={field.value.join(', ')}
+                    onChange={e => {
+                      const input = e.target.value;
+                      const keywords = input
+                        .split(',')
+                        .map(s => s.trim())
+                        .filter(s => s !== ''); // Remove empty strings
+                      field.onChange(keywords);
+                    }}
+                    className="mt-1 block w-full border rounded px-3 py-2"
+                    placeholder="e.g. dog, cat, rabbit"
+                  />
+                )}
+              /> */}
             </div>
           </div>
 
@@ -176,7 +207,7 @@ export default function RecordEditor() {
             type="submit"
             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
           >
-            Submit
+            Save
           </button>
         </form>
       </FormProvider>
@@ -273,5 +304,60 @@ function ValidatedField<FormValues extends FieldValues>({
         </div>
       </div>
     </>
+  );
+}
+
+// function CommaKeywordsField({ path }: { path: string }) {
+//   const { setValue, getValues } = useFormContext();
+//   const initial = (getValues(path) ?? []).join(", ");
+//   const [inputValue, setInputValue] = React.useState(initial);
+
+//   return (
+//     <input
+//       type="text"
+//       value={inputValue}
+//       onChange={(e) => setInputValue(e.target.value)}
+//       onBlur={() => {
+//         const keywords = inputValue
+//           .split(",")
+//           .map((s) => s.trim())
+//           .filter(Boolean);
+//         setValue(path, keywords, { shouldValidate: true });
+//       }}
+//       className="block w-full border rounded px-3 py-2"
+//       placeholder="e.g. apple, banana, cherry"
+//     />
+//   );
+// }
+
+export function CommaKeywordsField({ path }: { path: string }) {
+  const { setValue, control } = useFormContext();
+
+  // Watch the array value from the form state
+  const watchedValue = useWatch({ control, name: path }) ?? [];
+
+  // Local string state for the input
+  const [inputValue, setInputValue] = React.useState(watchedValue.join(", "));
+
+  // Sync inputValue when the form field changes (e.g. on reset)
+  useEffect(() => {
+    setInputValue(watchedValue.join(", "));
+  }, [watchedValue.join(", ")]); // dependency as string to avoid unnecessary updates
+
+  return (
+    <input
+      type="text"
+      value={inputValue}
+      onChange={(e) => setInputValue(e.target.value)}
+      onBlur={() => {
+        const keywords = inputValue
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+        setValue(path, keywords, { shouldValidate: true });
+      }}
+      className="block w-full border rounded px-3 py-2"
+      placeholder="e.g. apple, banana, cherry"
+    />
   );
 }
