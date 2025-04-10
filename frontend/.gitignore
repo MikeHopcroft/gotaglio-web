@@ -27,3 +27,6 @@ dist-ssr
 tsconfig.tsbuildinfo
 
 junk
+
+# Draw.io
+*.dtmp

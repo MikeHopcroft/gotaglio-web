@@ -2,7 +2,22 @@
 
 Top
 * Wireframe
+  * Project / Suite / Case hierarchy
+  * Emoticon
+  * Projects have pipelines, schemas, suites, runs, and annotations
+  * Suties have cases
+  * Maybe use local storage to simulate db?
+  * Copy case button
+    * Who creates UUID? When does this happen?
+  * Edited/Unsaved indicator
+  * Prompt to save on navigation
+  * Navigate sequence
+    * Show loading spinner
+    * Get case
+    * Store case in local storage
+    * Render form
   * Delete case
+    * Where to navigate to? Unselected case list?
   * Keywords
     * x styling
     * . list of suggested tags

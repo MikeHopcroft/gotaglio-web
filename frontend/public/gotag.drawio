@@ -1,0 +1,19 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.2 Chrome/134.0.6998.178 Electron/35.1.2 Safari/537.36" version="26.2.2">
+  <diagram name="Page-1" id="sw7tEdLEhmfe7MQQbSU7">
+    <mxGraphModel dx="1428" dy="961" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="C7H2JoMesARqou5uJ06l-1" value="&lt;font face=&quot;Helvetica&quot; style=&quot;font-size: 60px; color: rgb(255, 255, 153);&quot;&gt;&lt;b style=&quot;&quot;&gt;A&lt;/b&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=6;glass=0;rounded=1;fillColor=#FF6666;strokeColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="280" y="200" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="C7H2JoMesARqou5uJ06l-2" value="&lt;font style=&quot;font-size: 60px; color: rgb(255, 102, 102);&quot;&gt;&lt;b&gt;B&lt;/b&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=6;glass=0;rounded=1;fillColor=#FFFF99;strokeColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="240" y="280" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="C7H2JoMesARqou5uJ06l-3" value="&lt;font style=&quot;font-size: 60px; color: rgb(255, 255, 153);&quot;&gt;&lt;b&gt;C&lt;/b&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=6;glass=0;rounded=1;fillColor=#66FFFF;strokeColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="320" y="280" width="80" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
