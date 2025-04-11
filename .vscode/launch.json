@@ -11,10 +11,10 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\frontend\\build\\src\\backends2.js",
+      "program": "${workspaceFolder}/frontend/src/backends2.ts",
       "preLaunchTask": "tsc: build - frontend/tsconfig.json",
       "outFiles": [
-        "${workspaceFolder}/build/**/*.js"
+        "${workspaceFolder}/frontend/build/**/*.js"
       ]
     }
   ]
