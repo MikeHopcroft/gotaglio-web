@@ -1,6 +1,10 @@
 # TODO
 
 Top
+* Data model
+  * Are expected values in turns
+    * POJOs?
+    * Strings?
 * Wireframe
   * Project / Suite / Case hierarchy
   * Emoticon

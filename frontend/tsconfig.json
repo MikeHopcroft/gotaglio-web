@@ -4,6 +4,7 @@
     "lib": ["dom", "esnext"],
     "outDir": "build",
     "rootDir": ".",
+    "sourceMap": true, // Generate source maps
 },
   "include": [
     "src/**/*.ts",
