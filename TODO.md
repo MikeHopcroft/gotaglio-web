@@ -2,12 +2,16 @@
 
 Top
 * Cleanup
-  * App.ts casing error about RecordEditor
-  * Reogranize folders - components, logic, etc.
-  * Remove unused components
+  * x App.ts casing error about RecordEditor
+  * x Reogranize folders - components, logic, etc.
+  * x Remove unused components
   * Remove dead code
+    * . SuiteLayout - commented out code
+    * x SuitePage - entire file
   * Figure out unit tests or how to run one-offs
+  * . index.css
 * Navigation
+  * x Put useful links on default root
   * Extract frame/layout component
   * Route design
   * Selected item

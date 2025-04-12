@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as seedrandom from 'seedrandom';
+import seedrandom from 'seedrandom';
 const seed = '1234';
 const rnd = seedrandom(seed); // Initialize the random generator
 
@@ -304,12 +304,32 @@ function expand(
   }
 }
 
+const nodeTypeToPath = {
+  root: '/frame',  // TODO: is this needed?
+  Project: 'projects',
+  Suite: 'suites',
+  Case: 'cases',
+  Run: 'runs',
+};
+
+export function routeBuilder(path: string, node: TreeNode): string {
+  const nodeType = node.type;
+  if (nodeType === 'root') {
+    return '/frame/';
+  }
+  if (nodeType in nodeTypeToPath) {
+    const type = nodeTypeToPath[nodeType as keyof typeof nodeTypeToPath];
+    return `${path}${type}/${node.id}/`;
+  }
+  throw new Error(`Unknown node type: ${node.type}`);
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Sample usage
 //
 ///////////////////////////////////////////////////////////////////////////////
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function go() {
   const dataStore = buildIndexes();
   console.log(JSON.stringify(dataStore, null, 2));
@@ -330,9 +350,12 @@ function go() {
     dataStore as unknown as Record<string, Index<BaseRecord>>,
     nodeMapping,
     ['projects'],
-    [{type: 'projects', id: 2}, {type: 'suites', id: 6}],
+    [
+      {type: 'projects', id: 2},
+      {type: 'suites', id: 6},
+    ],
   );
   console.log(JSON.stringify(expanded, null, 2));
 }
 
-go();
+// go();

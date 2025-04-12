@@ -2,7 +2,7 @@ import React from 'react';
 import {useParams} from 'react-router-dom';
 
 import {CaseEditor} from './CaseEditor';
-import {suite} from './sample-data';
+import {suite} from '../sample-data';
 
 function CaseDetail() {
   // const caseData = {

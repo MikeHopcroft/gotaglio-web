@@ -2,7 +2,7 @@ import React from 'react';
 import {useParams} from 'react-router-dom';
 
 import SuiteEditor from './SuiteEditor';
-import {suite} from './sample-data';
+import {suite} from '../sample-data';
 
 function SuiteDetail() {
   // const caseData = {
