@@ -1,6 +1,25 @@
 # TODO
 
 Top
+* Cleanup
+  * App.ts casing error about RecordEditor
+  * Reogranize folders - components, logic, etc.
+  * Remove unused components
+  * Remove dead code
+  * Figure out unit tests or how to run one-offs
+* Navigation
+  * Extract frame/layout component
+  * Route design
+  * Selected item
+  * Toggle open/clossed
+  * Detail page
+  * New item
+    * Button location
+    * Position and appearance in tree
+  * Delete item
+    * What is new route?
+  * Dirty item warning on navigation
+  * Visuals
 * Data model
   * Are expected values in turns
     * POJOs?

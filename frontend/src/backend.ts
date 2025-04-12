@@ -5,7 +5,10 @@ const rnd = seedrandom(seed); // Initialize the random generator
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// Data model
+// Data model typse
+//
+// Project, Suite, Case, and RunLog correspond to schemas for database
+// tables.
 //
 ///////////////////////////////////////////////////////////////////////////////
 type PrimaryKey = number;
@@ -67,6 +70,8 @@ interface DataStore {
   runs: Index<RunLog>;
 }
 
+// Creates a DataStore, populated with random projects, suites, cases,
+// and runs.
 function buildIndexes(): DataStore {
   const projectIds = new IdAllocator();
   const suiteIds = new IdAllocator();
@@ -185,6 +190,8 @@ function getRandomInt(n: number): number {
   return Math.floor(rnd() * n) + 1;
 }
 
+// Dictionary of functions to convert each type of record to a TreeNode
+// for display in the client.
 const nodeMapping: NodeMapping = {
   projects: ({id, name, description}: Record<string, any>): TreeNode => ({
     id,
@@ -231,10 +238,7 @@ export interface TreeNode {
 
 type NodeMapping = Record<string, (r: Record<string, any>) => TreeNode>;
 
-// type NodeMapping =
-// (Record<string, any>) => TreeNode
-
-function buildNode<TYPE extends string>(
+function recordToTreeNode<TYPE extends string>(
   recordType: TYPE,
   mapping: NodeMapping,
   record: BaseRecord,
@@ -245,6 +249,8 @@ function buildNode<TYPE extends string>(
 type PathStep = {type: string; id: PrimaryKey};
 type Path = PathStep[];
 
+// Creates a tree of TreeNodes that includes the specified path
+// from the root, along with all sibling nodes along the path.
 function convert(
   data: Record<string, Index<BaseRecord>>,
   nodeMapping: NodeMapping,
@@ -264,7 +270,7 @@ function convert(
   for (const type of roots) {
     const records = data[type];
     root.children[type] = Object.values(records).map(record =>
-      buildNode(type, nodeMapping, record),
+      recordToTreeNode(type, nodeMapping, record),
     );
   }
 
@@ -291,57 +297,19 @@ function expand(
     // Populate it with unexpanded root records
     for (const [type, ids] of Object.entries(record.children)) {
       child.children[type] = ids.map(id =>
-        buildNode(type, nodeMapping, data[type][id]),
+        recordToTreeNode(type, nodeMapping, data[type][id]),
       );
     }
     parent = child;
   }
 }
 
-// while (path.length > 0) {
-//   const {type, id} = path.pop()!;
-//   const record = data[type][id];
-//   const child = parent.children[type].find(node => node.id === id);
-//   if (!child) {
-//     throw new Error(`Child not found: ${type} ${id}`);
-//   }
-
-//   // Populate it with unexpanded root records
-//   for (const [type, ids] of Object.entries(record.children)) {
-//     parent.children[type] = ids.map(id =>
-//       buildNode(type, nodeMapping, data[type][id]),
-//     );
-//   }
-// }
-
-/*
-Steps
-
-Create a TreeNode whose children are formed by mapping NodeBuilder over projects.
-Expand path
-  Find child TreeNode matching head of path
-  Find baseRecord in dataStore matching head of path
-  Convert children of baseRecord to TreeNode using NodeBuilder
-  Recursively call expand path on children
-*/
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Sample usage
 //
 ///////////////////////////////////////////////////////////////////////////////
-// function go() {
-//   const dataStore = buildIndexes();
-//   console.log(JSON.stringify(dataStore, null, 2));
-
-//   const expanded = convert(
-//     (dataStore as unknown) as Record<string, Index<BaseRecord>>,
-//     nodeMapping,
-//     ['projects'],
-//     [{ type: 'projects', id: 2}],
-//   );
-//   console.log(JSON.stringify(expanded, null, 2));
-// }
 function go() {
   const dataStore = buildIndexes();
   console.log(JSON.stringify(dataStore, null, 2));

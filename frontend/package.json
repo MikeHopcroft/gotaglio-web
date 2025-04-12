@@ -5,6 +5,7 @@
   "customNotes": {
     "type": "module"
   },
+  "type": "module",
   "engines": {
     "node": ">=16.4.0",
     "npm": ">=8.0.0"
