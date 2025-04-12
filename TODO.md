@@ -12,18 +12,18 @@ Top
   * . index.css
 * Navigation
   * x Put useful links on default root
-  * Extract frame/layout component
-  * Route design
+  * x Extract frame/layout component
+  * x Route design
   * Selected item
   * Toggle open/clossed
-  * Detail page
+  * x Detail page
   * New item
-    * Button location
-    * Position and appearance in tree
+    * x Button location
+    * . Position and appearance in tree
   * Delete item
     * What is new route?
   * Dirty item warning on navigation
-  * Visuals
+  * . Visuals
 * Data model
   * Are expected values in turns
     * POJOs?
