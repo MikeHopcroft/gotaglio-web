@@ -14,6 +14,8 @@ export interface BaseRecord {
   children: Record<string, PrimaryKey[]>;
 }
 
+export type AnyRecord = Project | Suite | Case | Annotation | Session | RunLog;
+
 export interface Project extends BaseRecord {
   name: string;
   description: string;

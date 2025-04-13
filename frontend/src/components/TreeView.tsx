@@ -3,19 +3,14 @@ import {NavLink} from 'react-router-dom';
 
 import {TreeNode} from '../dataModel';
 
-import {tree1, tree2} from '../mocks/data';
+import {tree1, tree2, tree3} from '../mocks/data';
 
-type TreeViewProps = {
-  routeBuilder: (prefix: string, node: TreeNode) => string;
-};
-
-export default function TreeView({routeBuilder}: TreeViewProps) {
-  return <TreeNodeComponent node={tree2} routeBuilder={routeBuilder} />;
+export default function TreeView() {
+  return <TreeNodeComponent node={tree3} />;
 }
 
 type TreeNodeProps = {
   node: TreeNode;
-  routeBuilder: (prefix: string, node: TreeNode) => string;
   path?: string;
   root?: boolean;
 };
@@ -23,10 +18,10 @@ type TreeNodeProps = {
 function TreeNodeComponent({
   node,
   path = '',
-  routeBuilder,
   root = true,
 }: TreeNodeProps) {
-  const fullPath = routeBuilder(path, node);
+  const fullPath = root ? '/frame/' : `${path}${node.type}/${node.id}/`;
+
   return (
     <div className={`${root ? '' : 'pl-3'}`}>
       {!root && (
@@ -57,7 +52,6 @@ function TreeNodeComponent({
               <TreeNodeComponent
                 key={child.id}
                 node={child}
-                routeBuilder={routeBuilder}
                 path={fullPath}
                 root={false}
               />

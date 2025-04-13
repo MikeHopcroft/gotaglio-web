@@ -1,6 +1,6 @@
-import {BaseRecord} from '../dataModel';
+import {AnyRecord} from '../dataModel';
 
-import {convert, nodeMapping} from './service';
+import {convert, fieldMapping} from './service';
 import {Index, buildIndexes} from './store';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,8 +25,8 @@ export function go() {
   console.log('\n\n\n\n');
 
   const expanded = convert(
-    dataStore as unknown as Record<string, Index<BaseRecord>>,
-    nodeMapping,
+    dataStore as unknown as Record<string, Index<AnyRecord>>,
+    fieldMapping,
     ['projects'],
     [
       {type: 'projects', id: 2},

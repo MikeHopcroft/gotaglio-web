@@ -1,8 +1,6 @@
 import React from 'react';
 import {BrowserRouter, Routes, Route, Outlet} from 'react-router-dom';
 
-import {routeBuilder} from '../backend';
-
 import './App.css';
 
 import CaseDetail from './CaseDetail';
@@ -24,10 +22,11 @@ function App() {
         <Route path="/record" element={<RecordEditor />} />
         <Route
           path="/tree"
-          element={<TreeView routeBuilder={routeBuilder} />}
+          element={<TreeView />}
         />
         <Route path="/frame" element={<Frame />}>
           <Route path="projects/:projectId" element={<Outlet/>}>
+            <Route path="annotations/:annotationId" element={<h1>Annotation Editor</h1>} />
             <Route path="suites/:suiteId" element={<Outlet />}>
               <Route path="cases/:caseId" element={<RecordEditor />} />
               <Route index element={<h1>Suite Editor</h1>} />

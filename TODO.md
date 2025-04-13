@@ -3,6 +3,7 @@
 // npx tsx src/test.ts
 
 Top
+* Sessions needs route navigation (vs hard-coded sample data) and App.tsx nested route
 * Use path combination library
 * Check route components for safety
 * Are encode/decode URI necessary or does react-router handle these?

@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Path} from '../backend';
-import {BaseRecord, TreeNode} from '../dataModel';
+import {AnyRecord, BaseRecord, TreeNode} from '../dataModel';
 
 import {Index} from './store';
 
-export type NodeMapping = Record<string, (r: Record<string, any>) => TreeNode>;
+type FieldMapping = Record<string, Record<string, string>>;
 
 // Creates a tree of TreeNodes that includes the specified path
 // from the root, along with all sibling nodes along the path.
 export function convert(
-  data: Record<string, Index<BaseRecord>>,
-  nodeMapping: NodeMapping,
+  data: Record<string, Index<AnyRecord>>,
+  nodeMapping: FieldMapping,
   roots: string[],
   path: Path,
 ): TreeNode {
@@ -37,8 +37,8 @@ export function convert(
 }
 
 export function expand(
-  data: Record<string, Index<BaseRecord>>,
-  nodeMapping: NodeMapping,
+  data: Record<string, Index<AnyRecord>>,
+  fieldMapping: FieldMapping,
   parent: TreeNode,
   path: Path,
 ): void {
@@ -54,7 +54,7 @@ export function expand(
     // Populate it with unexpanded root records
     for (const [type, ids] of Object.entries(record.children)) {
       child.children[type] = ids.map(id =>
-        recordToTreeNode(type, nodeMapping, data[type][id]),
+        recordToTreeNode(type, fieldMapping, data[type][id]),
       );
     }
     parent = child;
@@ -62,56 +62,29 @@ export function expand(
 }
 
 export function recordToTreeNode<TYPE extends string>(
-  recordType: TYPE,
-  mapping: NodeMapping,
+  type: TYPE,
+  mapping: FieldMapping,
   record: BaseRecord,
 ): TreeNode {
-  return mapping[recordType](record);
+  console.log(123);
+  const node: Record<string, any> = {id: record.id, type, children: {}};
+  for (const field in mapping[type]) {
+    const key = fieldMapping[type][field]
+    if (key in record) {
+      node[field] = String((record as Record<string, any>)[key]);
+    } else {
+      throw new Error(`Field not found: ${type} ${key}`);
+    }
+  }
+  console.log(`${record} => ${node}`)
+  return node as TreeNode;
 }
 
-// Dictionary of functions to convert each type of record to a TreeNode
-// for display in the client.
-export const nodeMapping: NodeMapping = {
-  projects: ({id, name, description}: Record<string, any>): TreeNode => ({
-    id,
-    type: 'Project',
-    name,
-    description,
-    children: {},
-  }),
-  annotations: ({id, name, description}: Record<string, any>): TreeNode => ({
-    id,
-    type: 'Annotation',
-    name,
-    description,
-    children: {},
-  }),
-  sessions: ({id, name, description}: Record<string, any>): TreeNode => ({
-    id,
-    type: 'Session',
-    name,
-    description,
-    children: {},
-  }),
-  suites: ({id, name, description}: Record<string, any>): TreeNode => ({
-    id,
-    type: 'Suite',
-    name,
-    description,
-    children: {},
-  }),
-  cases: ({id, uuid, description}: Record<string, any>): TreeNode => ({
-    id,
-    type: 'Case',
-    name: description,
-    description: uuid,
-    children: {},
-  }),
-  runs: ({id, uuid}: Record<string, any>) => ({
-    id,
-    type: 'Run',
-    name: uuid,
-    description: `Run ${id}`,
-    children: {},
-  }),
-};
+export const fieldMapping: FieldMapping = {
+  projects: {name: 'name', description: 'description'},
+  annotations: {name: 'name', description: 'description'},
+  sessions: {name: 'name', description: 'description'},
+  suites: {name: 'name', description: 'description'},
+  cases: {name: 'description', description: 'uuid'},
+  runs: {name: 'uuid', description: 'id'},  
+}
