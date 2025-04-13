@@ -3,7 +3,10 @@
 // npx tsx src/test.ts
 
 Top
-* Mocks folder
+* Use path combination library
+* Check route components for safety
+* Are encode/decode URI necessary or does react-router handle these?
+* x Mocks folder
 * Route loads correct sidebar
 * Route loads correct detail
 * Form editors

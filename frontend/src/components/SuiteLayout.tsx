@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavLink, Outlet} from 'react-router-dom';
 
-import {suite} from '../sample-data';
+import {suite} from './sample-data';
 
 function SuiteLayout() {
   // const {suiteId} = useParams();

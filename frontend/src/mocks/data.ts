@@ -1,4 +1,4 @@
-import {TreeNode} from '../backend';
+import {TreeNode} from '../dataModel';
 
 export const tree1: TreeNode = {
   id: 0,

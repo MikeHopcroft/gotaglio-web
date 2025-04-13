@@ -1,9 +1,9 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 
-import {TreeNode} from '../backend';
+import {TreeNode} from '../dataModel';
 
-import {tree1, tree2} from './sampleData';
+import {tree1, tree2} from '../mocks/data';
 
 type TreeViewProps = {
   routeBuilder: (prefix: string, node: TreeNode) => string;
