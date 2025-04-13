@@ -1,7 +1,29 @@
 # TODO
 
+// npx tsx src/test.ts
+
 Top
+* Mocks folder
+* Route loads correct sidebar
+* Route loads correct detail
+* Form editors
+* Expand/collapse
+* RecordEditor
+  * Delete button in navbar
+  * Rename
+* Project editor
+* Suite editor
+* Run viewer
+* Annotations
+  * Instructions
+  * Viewing template
+  * Field definitions
+* Sessions
+  * TODO: sessions not showing up in tree
+  * Dashboard
+  * Work
 * Cleanup
+  * 
   * x App.ts casing error about RecordEditor
   * x Reogranize folders - components, logic, etc.
   * x Remove unused components

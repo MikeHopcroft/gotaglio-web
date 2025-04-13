@@ -21,7 +21,11 @@ interface BaseRecord {
 interface Project extends BaseRecord {
   name: string;
   description: string;
-  children: {suites: PrimaryKey[]; runs: PrimaryKey[]};
+  children: {
+    suites: PrimaryKey[];
+    annotations: PrimaryKey[];
+    runs: PrimaryKey[];
+  };
 }
 
 interface Suite extends BaseRecord {
@@ -41,6 +45,19 @@ interface Case extends BaseRecord {
 interface Turn {
   query: string;
   expected: Record<string, any>;
+}
+
+interface Annotation extends BaseRecord {
+  name: string;
+  description: string;
+  instructions: string;
+  template: string;
+  children: {sessions: PrimaryKey[]};
+}
+
+interface Session extends BaseRecord {
+  name: string;
+  description: string;
 }
 
 interface RunLog extends BaseRecord {
@@ -67,15 +84,19 @@ interface DataStore {
   projects: Index<Project>;
   suites: Index<Suite>;
   cases: Index<Case>;
+  annotations: Index<Annotation>;
+  sessions: Index<Session>;
   runs: Index<RunLog>;
 }
 
-// Creates a DataStore, populated with random projects, suites, cases,
-// and runs.
+// Creates a DataStore, populated with random projects,
+// annotations, sessions, suites, cases, and runs.
 function buildIndexes(): DataStore {
   const projectIds = new IdAllocator();
   const suiteIds = new IdAllocator();
   const caseIds = new IdAllocator();
+  const annotationIds = new IdAllocator();
+  const sessionIds = new IdAllocator();
   const runIds = new IdAllocator();
 
   //
@@ -83,12 +104,17 @@ function buildIndexes(): DataStore {
   //
   const projects: Index<Project> = {};
   for (let i = 1; i <= getRandomInt(5) + 2; i++) {
-    const suites: number[] = [];
+    const suites: PrimaryKey[] = [];
     for (let j = 1; j <= getRandomInt(5); j++) {
       suites.push(suiteIds.getNextId());
     }
 
-    const runs: number[] = [];
+    const annotations: PrimaryKey[] = [];
+    for (let j = 1; j <= getRandomInt(3); j++) {
+      annotations.push(annotationIds.getNextId());
+    }
+
+    const runs: PrimaryKey[] = [];
     for (let j = 1; j <= getRandomInt(5); j++) {
       runs.push(runIds.getNextId());
     }
@@ -98,7 +124,7 @@ function buildIndexes(): DataStore {
       id,
       name: `Project ${id}`,
       description: `Description for Project ${id}`,
-      children: {suites, runs},
+      children: {suites, annotations, runs},
     };
     projects[i] = project;
   }
@@ -107,27 +133,26 @@ function buildIndexes(): DataStore {
   // Create suites
   //
   const suites: Index<Suite> = {};
-  for (let i = 1; i <= suiteIds.getLastId(); i++) {
-    const cases: number[] = [];
+  for (let id = 1; id <= suiteIds.getLastId(); id++) {
+    const cases: PrimaryKey[] = [];
     for (let j = 1; j <= getRandomInt(5); j++) {
       cases.push(caseIds.getNextId());
     }
 
-    const id = i;
     const suite: Suite = {
       id,
       name: `Suite ${id}`,
       description: `Description for Suite ${id}`,
       children: {cases},
     };
-    suites[i] = suite;
+    suites[id] = suite;
   }
 
   //
   // Create cases
   //
   const cases: Index<Case> = {};
-  for (let i = 1; i <= caseIds.getLastId(); i++) {
+  for (let id = 1; id <= caseIds.getLastId(); id++) {
     const turns: Turn[] = [];
     for (let j = 1; j <= getRandomInt(5); j++) {
       turns.push({
@@ -136,7 +161,6 @@ function buildIndexes(): DataStore {
       });
     }
 
-    const id = i;
     const uuid = crypto.randomUUID();
     const c: Case = {
       id,
@@ -146,7 +170,45 @@ function buildIndexes(): DataStore {
       turns,
       children: {},
     };
-    cases[i] = c;
+    cases[id] = c;
+  }
+
+  //
+  // Create annoations
+  //
+  const annotations: Index<Annotation> = {};
+  for (let id = 1; id <= annotationIds.getLastId(); id++) {
+    const sessions: PrimaryKey[] = [];
+    for (let j = 1; j <= getRandomInt(5); j++) {
+      sessions.push(sessionIds.getNextId());
+    }
+
+    const annotation: Annotation = {
+      id,
+      name: `Annotation ${id}`,
+      description: `Description for Annotation ${id}`,
+      instructions: `instructions for Annotation ${id}`,
+      template: `Template for Annotation ${id}`,
+      children: {sessions},
+    };
+
+    annotations[id] = annotation;
+  }
+
+
+  //
+  // Create sessions
+  //
+  const sessions: Index<Session> = {};
+  for (let id = 1; id <= sessionIds.getLastId(); id++) {
+    const session: Session = {
+      id,
+      name: `Session ${id}`,
+      description: `Description for Session ${id}`,
+      children: {},
+    };
+
+    sessions[id] = session;
   }
 
   //
@@ -168,6 +230,8 @@ function buildIndexes(): DataStore {
 
   return {
     projects,
+    annotations,
+    sessions,
     suites,
     cases,
     runs,
@@ -196,6 +260,20 @@ const nodeMapping: NodeMapping = {
   projects: ({id, name, description}: Record<string, any>): TreeNode => ({
     id,
     type: 'Project',
+    name,
+    description,
+    children: {},
+  }),
+  annotations: ({id, name, description}: Record<string, any>): TreeNode => ({
+    id,
+    type: 'Annotation',
+    name,
+    description,
+    children: {},
+  }),
+  sessions: ({id, name, description}: Record<string, any>): TreeNode => ({
+    id,
+    type: 'Session',
     name,
     description,
     children: {},
@@ -305,8 +383,10 @@ function expand(
 }
 
 const nodeTypeToPath = {
-  root: '/frame',  // TODO: is this needed?
+  root: '/frame', // TODO: is this needed?
   Project: 'projects',
+  Annotation: 'annotations',
+  Session: 'sessions',
   Suite: 'suites',
   Case: 'cases',
   Run: 'runs',
@@ -330,7 +410,7 @@ export function routeBuilder(path: string, node: TreeNode): string {
 //
 ///////////////////////////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function go() {
+export function go() {
   const dataStore = buildIndexes();
   console.log(JSON.stringify(dataStore, null, 2));
 
@@ -359,3 +439,5 @@ function go() {
 }
 
 // go();
+
+// npx tsx src/test.ts
