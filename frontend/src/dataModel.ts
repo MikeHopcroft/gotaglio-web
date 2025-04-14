@@ -84,7 +84,7 @@ export interface TreeNode {
   children: Record<string, TreeNode[]>;
 }
 
-export type MasterDetailData = {tree: TreeNode};
+export type MasterDetailData = {tree: TreeNode, type: string, detail: AnyRecord};
 
 export interface IService {
   getData(path: string): Promise<MasterDetailData>;

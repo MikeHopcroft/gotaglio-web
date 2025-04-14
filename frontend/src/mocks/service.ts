@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {Path} from '../backend';
-import type {AnyRecord, BaseRecord, IService, MasterDetailData, TreeNode} from '../dataModel';
+import type {
+  AnyRecord,
+  BaseRecord,
+  IService,
+  MasterDetailData,
+  PrimaryKey,
+  TreeNode,
+} from '../dataModel';
 
 import {buildIndexes, Index} from './store';
 
@@ -9,24 +15,22 @@ export class MockService implements IService {
 
   constructor() {
     this.data = buildIndexes() as unknown as Record<string, Index<AnyRecord>>;
-    console.log('MockService: initialized');
   }
 
   getData(pathName: string): Promise<MasterDetailData> {
-    console.log(`MockService: getData(${pathName})`);
-    const path = pathsFromRoute(pathName)
-    const tree = convert(
-      this.data,
-      fieldMapping,
-      ['projects'],
-      path,
-    );
+    const path = pathsFromRoute(pathName);
+    const tree = convert(this.data, fieldMapping, ['projects'], path);
+    const {type, id} = path[path.length - 1];
+    const detail = this.data[type][id];
 
-    return Promise.resolve({tree});
+    return Promise.resolve({tree, type, detail});
   }
 }
 
-function pathsFromRoute(route: string) {
+type PathStep = {type: string; id: PrimaryKey};
+type Path = PathStep[];
+
+function pathsFromRoute(route: string): Path {
   const segments = route.split('/').filter(Boolean);
   segments.shift(); // remove the first segment
   const path: Path = [];
@@ -100,7 +104,6 @@ export function recordToTreeNode<TYPE extends string>(
   mapping: FieldMapping,
   record: BaseRecord,
 ): TreeNode {
-  console.log(123);
   const node: Record<string, any> = {id: record.id, type, children: {}};
   for (const field in mapping[type]) {
     const key = fieldMapping[type][field];
@@ -110,7 +113,6 @@ export function recordToTreeNode<TYPE extends string>(
       throw new Error(`Field not found: ${type} ${key}`);
     }
   }
-  console.log(`${record} => ${node}`);
   return node as TreeNode;
 }
 

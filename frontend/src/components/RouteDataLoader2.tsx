@@ -24,7 +24,6 @@ const RouteDataContext = createContext<RouteDataContextType>({
 type RouteDataProviderProps = {
   children: React.ReactNode;
   service: IService;
-  // loadData: LoadDataFn;
 };
 
 export function RouteDataProvider2({ children, service }: RouteDataProviderProps) {
@@ -38,20 +37,15 @@ export function RouteDataProvider2({ children, service }: RouteDataProviderProps
   
   // Memoized function to load data
   const fetchData = useCallback(async (path: string) => {
-    console.log(`RouteDataLoader2: Starting data load for path: ${path}`);
     setIsLoading(true);
     setError(null);
     
     try {
       const result = await service.getData(path);
-      console.log(`RouteDataLoader2: Data load complete for path: ${path}`);
-      console.log(`RouteDataLoader2: Result: ${JSON.stringify(result, null, 2)}`);
       setData(result);
     } catch (err) {
-      console.error(`RouteDataLoader2: Error loading data for path: ${path}`, err);
       setError(err instanceof Error ? err : new Error(String(err)));
     } finally {
-      console.log(`RouteDataLoader2: setIsLoading(false)`);
       setIsLoading(false);
     }
   }, [service]);
@@ -63,7 +57,6 @@ export function RouteDataProvider2({ children, service }: RouteDataProviderProps
     
     // Only fetch if pathname has changed
     if (currentPathname !== prevPathnameRef.current) {
-      console.log(`RouteDataLoader2: Pathname changed from ${prevPathnameRef.current} to ${currentPathname}`);
       prevPathnameRef.current = currentPathname;
       fetchData(currentPathname);
     }
@@ -76,15 +69,6 @@ export function RouteDataProvider2({ children, service }: RouteDataProviderProps
     fetchData(currentPath);
   }, [location, fetchData]);
   
-  // Provide render debugging info
-  useEffect(() => {
-    console.log('RouteDataLoader2: State updated:', { 
-      isLoading, 
-      hasData: !!data, 
-      hasError: !!error, 
-      pathname: location.pathname 
-    });
-  }, [isLoading, data, error, location.pathname]);
   
   const value = {
     data,
@@ -103,16 +87,6 @@ export function RouteDataProvider2({ children, service }: RouteDataProviderProps
 // Hook to use the data
 export function useRouteData() {
   const context = useContext(RouteDataContext);
-  
-  // Add render counter for debugging
-  const renderCount = useRef(0);
-  renderCount.current++;
-  
-  console.log(`useRouteData render #${renderCount.current}:`, {
-    isLoading: context.isLoading,
-    hasData: !!context.data,
-    hasError: !!context.error
-  });
   
   if (!context) {
     throw new Error('useRouteData must be used within a RouteDataProvider');

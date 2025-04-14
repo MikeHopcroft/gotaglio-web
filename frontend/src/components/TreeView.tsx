@@ -6,7 +6,7 @@ import type {MasterDetailData, TreeNode} from '../dataModel';
 import {useRouteData} from './RouteDataLoader2';
 
 export default function TreeView() {
-  const {data, isLoading, error, reload} = useRouteData();
+  const {data, isLoading, error} = useRouteData();
 
   if (isLoading) {
     return <div>Loading...</div>;

@@ -4,10 +4,11 @@ import {BrowserRouter, Outlet, Route, Routes} from 'react-router-dom';
 import type {IService} from '../dataModel';
 
 import './App.css';
-import {RouteDataProvider2} from './RouteDataLoader2';
+import DetailPane from './DetailPane';
 import Frame from './Frame';
 import Home from './Home';
 import RecordEditor from './RecordEditor';
+import {RouteDataProvider2} from './RouteDataLoader2';
 
 type AppProps = {
   service: IService;
@@ -21,15 +22,15 @@ function App({service}: AppProps) {
           <Route path="/frame" element={<Frame />}>
             <Route path="projects/:projectId" element={<Outlet />}>
               <Route path="annotations/:annotationId" element={<Outlet />}>
-                <Route path="sessions/:sessionId" element={<h1>Session Editor</h1>} />
-                <Route index element={<h1>Annotation Editor</h1>} />
+                <Route path="sessions/:sessionId" element={<DetailPane />} />
+                <Route index element={<DetailPane />} />
               </Route>
               <Route path="suites/:suiteId" element={<Outlet />}>
                 <Route path="cases/:caseId" element={<RecordEditor />} />
-                <Route index element={<h1>Suite Editor</h1>} />
+                <Route index element={<DetailPane />} />
               </Route>
-              <Route path="runs/:runId" element={<h1>Run Editor</h1>} />
-              <Route index element={<h1>Project Editor</h1>} />
+              <Route path="runs/:runId" element={<DetailPane />} />
+              <Route index element={<DetailPane />} />
             </Route>
             <Route index element={<RecordEditor />} />
           </Route>
