@@ -1,8 +1,42 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Path} from '../backend';
-import {AnyRecord, BaseRecord, TreeNode} from '../dataModel';
+import type {Path} from '../backend';
+import type {AnyRecord, BaseRecord, IService, MasterDetailData, TreeNode} from '../dataModel';
 
-import {Index} from './store';
+import {buildIndexes, Index} from './store';
+
+export class MockService implements IService {
+  data: Record<string, Index<AnyRecord>>;
+
+  constructor() {
+    this.data = buildIndexes() as unknown as Record<string, Index<AnyRecord>>;
+    console.log('MockService: initialized');
+  }
+
+  getData(pathName: string): Promise<MasterDetailData> {
+    console.log(`MockService: getData(${pathName})`);
+    const path = pathsFromRoute(pathName)
+    const tree = convert(
+      this.data,
+      fieldMapping,
+      ['projects'],
+      path,
+    );
+
+    return Promise.resolve({tree});
+  }
+}
+
+function pathsFromRoute(route: string) {
+  const segments = route.split('/').filter(Boolean);
+  segments.shift(); // remove the first segment
+  const path: Path = [];
+  while (segments.length) {
+    const type = segments.shift()!;
+    const id = (segments.length ? Number(segments.shift()) : undefined)!;
+    path.push({type, id});
+  }
+  return path;
+}
 
 type FieldMapping = Record<string, Record<string, string>>;
 
@@ -69,14 +103,14 @@ export function recordToTreeNode<TYPE extends string>(
   console.log(123);
   const node: Record<string, any> = {id: record.id, type, children: {}};
   for (const field in mapping[type]) {
-    const key = fieldMapping[type][field]
+    const key = fieldMapping[type][field];
     if (key in record) {
       node[field] = String((record as Record<string, any>)[key]);
     } else {
       throw new Error(`Field not found: ${type} ${key}`);
     }
   }
-  console.log(`${record} => ${node}`)
+  console.log(`${record} => ${node}`);
   return node as TreeNode;
 }
 
@@ -86,5 +120,5 @@ export const fieldMapping: FieldMapping = {
   sessions: {name: 'name', description: 'description'},
   suites: {name: 'name', description: 'description'},
   cases: {name: 'description', description: 'uuid'},
-  runs: {name: 'uuid', description: 'id'},  
-}
+  runs: {name: 'uuid', description: 'id'},
+};

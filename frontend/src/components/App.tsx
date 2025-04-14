@@ -1,45 +1,58 @@
 import React from 'react';
-import {BrowserRouter, Routes, Route, Outlet} from 'react-router-dom';
+import {BrowserRouter, Outlet, Route, Routes} from 'react-router-dom';
+
+import type {IService} from '../dataModel';
 
 import './App.css';
-
-import CaseDetail from './CaseDetail';
+import {RouteDataProvider2} from './RouteDataLoader2';
 import Frame from './Frame';
 import Home from './Home';
 import RecordEditor from './RecordEditor';
-import SuiteDetail from './SuiteDetail';
-import SuiteLayout from './SuiteLayout';
-import TreeView from './TreeView';
 
-function App() {
+type AppProps = {
+  service: IService;
+};
+
+function App({service}: AppProps) {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/suite/:suiteId" element={<SuiteLayout />}>
-          <Route index element={<SuiteDetail />} />
-          <Route path="case/:caseId" element={<CaseDetail />} />
-        </Route>
-        <Route path="/record" element={<RecordEditor />} />
-        <Route
-          path="/tree"
-          element={<TreeView />}
-        />
-        <Route path="/frame" element={<Frame />}>
-          <Route path="projects/:projectId" element={<Outlet/>}>
-            <Route path="annotations/:annotationId" element={<h1>Annotation Editor</h1>} />
-            <Route path="suites/:suiteId" element={<Outlet />}>
-              <Route path="cases/:caseId" element={<RecordEditor />} />
-              <Route index element={<h1>Suite Editor</h1>} />
+      <RouteDataProvider2 service={service}>
+        <Routes>
+          <Route path="/frame" element={<Frame />}>
+            <Route path="projects/:projectId" element={<Outlet />}>
+              <Route path="annotations/:annotationId" element={<Outlet />}>
+                <Route path="sessions/:sessionId" element={<h1>Session Editor</h1>} />
+                <Route index element={<h1>Annotation Editor</h1>} />
+              </Route>
+              <Route path="suites/:suiteId" element={<Outlet />}>
+                <Route path="cases/:caseId" element={<RecordEditor />} />
+                <Route index element={<h1>Suite Editor</h1>} />
+              </Route>
+              <Route path="runs/:runId" element={<h1>Run Editor</h1>} />
+              <Route index element={<h1>Project Editor</h1>} />
             </Route>
-            <Route path="runs/:runId" element={<h1>Run Editor</h1>} />
-            <Route index element={<h1>Project Editor</h1>} />
+            <Route index element={<RecordEditor />} />
           </Route>
-          <Route index element={<RecordEditor />} />
-        </Route>
-        <Route index element={<Home />} />
-      </Routes>
+          <Route index element={<Home />} />
+        </Routes>
+      </RouteDataProvider2>
     </BrowserRouter>
   );
 }
+
+// function Loading() {
+//   return <div className="text-red-500">Loading...</div>;
+// }
+
+// async function loader({params}: LoaderFunctionArgs) {
+//   console.log('loader', params);
+//   return {
+//     user: {name: 'John Doe'} as User,
+//     activity: [
+//       {id: 1, description: 'activey 1'},
+//       {id: 2, description: 'activey 2'},
+//     ] as Activity[],
+//   };
+// }
 
 export default App;

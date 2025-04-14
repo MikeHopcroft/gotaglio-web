@@ -20,7 +20,7 @@ import {
 ///////////////////////////////////////////////////////////////////////////////
 export type Index<T> = Record<PrimaryKey, T>;
 
-interface DataStore {
+export interface DataStore {
   projects: Index<Project>;
   suites: Index<Suite>;
   cases: Index<Case>;

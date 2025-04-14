@@ -1,12 +1,24 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 
-import {TreeNode} from '../dataModel';
+import type {MasterDetailData, TreeNode} from '../dataModel';
 
-import {tree1, tree2, tree3} from '../mocks/data';
+import {useRouteData} from './RouteDataLoader2';
 
 export default function TreeView() {
-  return <TreeNodeComponent node={tree3} />;
+  const {data, isLoading, error, reload} = useRouteData();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  } else if (error) {
+    return <div>Error: {error.message}</div>;
+  } else {
+    return (
+      <>
+        <TreeNodeComponent node={(data as MasterDetailData).tree} />
+      </>
+    );
+  }
 }
 
 type TreeNodeProps = {
@@ -15,11 +27,7 @@ type TreeNodeProps = {
   root?: boolean;
 };
 
-function TreeNodeComponent({
-  node,
-  path = '',
-  root = true,
-}: TreeNodeProps) {
+function TreeNodeComponent({node, path = '', root = true}: TreeNodeProps) {
   const fullPath = root ? '/frame/' : `${path}${node.type}/${node.id}/`;
 
   return (
