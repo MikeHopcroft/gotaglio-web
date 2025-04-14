@@ -3,7 +3,7 @@ import {NavLink} from 'react-router-dom';
 
 import type {MasterDetailData, TreeNode} from '../dataModel';
 
-import {useRouteData} from './RouteDataLoader2';
+import {useRouteData} from './RouteDataProvider';
 
 export default function TreeView() {
   const {data, isLoading, error} = useRouteData();

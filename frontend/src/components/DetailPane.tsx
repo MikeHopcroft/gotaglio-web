@@ -2,7 +2,7 @@ import React from 'react';
 
 import type {MasterDetailData} from '../dataModel';
 
-import {useRouteData} from './RouteDataLoader2';
+import {useRouteData} from './RouteDataProvider';
 
 function DetailPane() {
     const {data, isLoading, error} = useRouteData();

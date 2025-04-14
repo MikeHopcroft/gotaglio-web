@@ -8,7 +8,7 @@ import DetailPane from './DetailPane';
 import Frame from './Frame';
 import Home from './Home';
 import RecordEditor from './RecordEditor';
-import {RouteDataProvider2} from './RouteDataLoader2';
+import {RouteDataProvider} from './RouteDataProvider';
 
 type AppProps = {
   service: IService;
@@ -17,7 +17,7 @@ type AppProps = {
 function App({service}: AppProps) {
   return (
     <BrowserRouter>
-      <RouteDataProvider2 service={service}>
+      <RouteDataProvider service={service}>
         <Routes>
           <Route path="/frame" element={<Frame />}>
             <Route path="projects/:projectId" element={<Outlet />}>
@@ -32,28 +32,12 @@ function App({service}: AppProps) {
               <Route path="runs/:runId" element={<DetailPane />} />
               <Route index element={<DetailPane />} />
             </Route>
-            <Route index element={<RecordEditor />} />
           </Route>
           <Route index element={<Home />} />
         </Routes>
-      </RouteDataProvider2>
+      </RouteDataProvider>
     </BrowserRouter>
   );
 }
-
-// function Loading() {
-//   return <div className="text-red-500">Loading...</div>;
-// }
-
-// async function loader({params}: LoaderFunctionArgs) {
-//   console.log('loader', params);
-//   return {
-//     user: {name: 'John Doe'} as User,
-//     activity: [
-//       {id: 1, description: 'activey 1'},
-//       {id: 2, description: 'activey 2'},
-//     ] as Activity[],
-//   };
-// }
 
 export default App;

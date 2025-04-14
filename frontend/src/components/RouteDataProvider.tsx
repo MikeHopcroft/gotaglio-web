@@ -26,7 +26,7 @@ type RouteDataProviderProps = {
   service: IService;
 };
 
-export function RouteDataProvider2({ children, service }: RouteDataProviderProps) {
+export function RouteDataProvider({ children, service }: RouteDataProviderProps) {
   const location = useLocation();
   const [data, setData] = useState<MasterDetailData | null>(null);
   const [isLoading, setIsLoading] = useState(true);

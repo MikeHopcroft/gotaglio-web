@@ -2,7 +2,7 @@ import seedrandom from 'seedrandom';
 const seed = '1234';
 const rnd = seedrandom(seed); // Initialize the random generator
 
-import {
+import type {
   Annotation,
   Case,
   PrimaryKey,

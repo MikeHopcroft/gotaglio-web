@@ -1,4 +1,4 @@
-import {TreeNode} from '../dataModel';
+import type {TreeNode} from '../dataModel';
 
 export const tree1: TreeNode = {
   id: 0,

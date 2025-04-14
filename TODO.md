@@ -3,14 +3,22 @@
 // npx tsx src/test.ts
 
 Top
-* Sessions needs route navigation (vs hard-coded sample data) and App.tsx nested route
+* Handle /frame/projects, /frame/projects1/suites, etc. where specific detail is not selected
+* Rename RecordEditor to CaseEditor
+* Port CaseEditor to use mock store.
+* Port mock store to use LocalStorage.
+* Error at http://localhost:5173/frame: Error: Cannot destructure property 'type' of 'path[(path.length - 1)]' as it is undefined.
+* Error: handle no route found: No routes matched location "/record"
+* Consider renaming /frame route segment
+* Fast refresh warning for useRouteData() hook
+* x Sessions needs route navigation (vs hard-coded sample data) and App.tsx nested route
 * Use path combination library
 * Check route components for safety
 * Are encode/decode URI necessary or does react-router handle these?
 * x Mocks folder
-* Route loads correct sidebar
-* Route loads correct detail
-* Form editors
+* x Route loads correct sidebar
+* x Route loads correct detail
+* . Form editors
 * Expand/collapse
 * RecordEditor
   * Delete button in navbar
@@ -23,16 +31,15 @@ Top
   * Viewing template
   * Field definitions
 * Sessions
-  * TODO: sessions not showing up in tree
+  * x TODO: sessions not showing up in tree
   * Dashboard
   * Work
 * Cleanup
-  * 
   * x App.ts casing error about RecordEditor
   * x Reogranize folders - components, logic, etc.
   * x Remove unused components
   * Remove dead code
-    * . SuiteLayout - commented out code
+    * x SuiteLayout - commented out code
     * x SuitePage - entire file
   * Figure out unit tests or how to run one-offs
   * . index.css
