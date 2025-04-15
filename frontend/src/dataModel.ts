@@ -88,5 +88,6 @@ export type MasterDetailData = {tree: TreeNode, type: string, detail: AnyRecord}
 
 export interface IService {
   getData(path: string): Promise<MasterDetailData>;
+  update(path: string, type: string, record: AnyRecord): Promise<MasterDetailData>
 }
 

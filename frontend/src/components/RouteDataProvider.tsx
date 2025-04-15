@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import type { IService, MasterDetailData } from '../dataModel';
+import type { AnyRecord, IService, MasterDetailData } from '../dataModel';
 
 // Context type definition
 type RouteDataContextType = {
@@ -10,6 +10,7 @@ type RouteDataContextType = {
   isLoading: boolean;
   error: Error | null;
   reload: () => void;
+  update: (type: string, record: AnyRecord) => Promise<void>;
 };
 
 // Create context with a sensible default
@@ -18,6 +19,7 @@ const RouteDataContext = createContext<RouteDataContextType>({
   isLoading: false,
   error: null,
   reload: () => {},
+  update: () => Promise.resolve(),
 });
 
 // Props for our provider
@@ -69,12 +71,29 @@ export function RouteDataProvider({ children, service }: RouteDataProviderProps)
     fetchData(currentPath);
   }, [location, fetchData]);
   
+  // Manual reload function
+  const update = useCallback(async (type: string, record: AnyRecord) => {
+    console.log(`RouteDataLoader2: Updating`);
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const currentPath = location.pathname;
+      const result = await service.update(currentPath, type, record);
+      setData(result);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error(String(err)));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [location, service]);
   
   const value = {
     data,
     isLoading,
     error,
-    reload
+    reload,
+    update
   };
 
   return (

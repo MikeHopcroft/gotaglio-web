@@ -3,7 +3,23 @@
 // npx tsx src/test.ts
 
 Top
+* Error updating runlog: DetailPane.tsx:9 Uncaught TypeError: Cannot read properties of undefined (reading 'match')
+    at updateStringVersion (DetailPane.tsx:9:23)
+    at performUpdate (DetailPane.tsx:27:15)
+* Form editing
+  * Service mock on IndexedDB
+    * Button to rebuild mock data in IndexedDB
+    * Service gets data from IndexedDB
+    * Service call updates record in IndexedDB
+* Create
+  * Needs to navigate to new record
+* Delete
+  * Navigate to parent node?
 * Handle /frame/projects, /frame/projects1/suites, etc. where specific detail is not selected
+  * Modify convert() to use paths with type but no id
+  * Handle case where there is no instance of child type
+  * Add NavLinks to type grouping nodes
+  * Modify Detail or (TypeDetail components) to render instructions
 * Rename RecordEditor to CaseEditor
 * Port CaseEditor to use mock store.
 * Port mock store to use LocalStorage.
@@ -207,4 +223,10 @@ npm WARN EBADENGINE   package: '@typescript-eslint/eslint-plugin@8.28.0',
 npm WARN EBADENGINE   required: { node: '^18.18.0 || ^20.9.0 || >=21.1.0' },
 npm WARN EBADENGINE   current: { node: 'v19.8.1', npm: '9.5.1' }
 npm WARN EBADENGINE }
+~~~
+
+~~~
+git reset --mixed HEAD~1
+git checkout main -- .
+git checkout main
 ~~~

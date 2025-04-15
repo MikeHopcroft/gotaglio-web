@@ -4,8 +4,33 @@ import type {MasterDetailData} from '../dataModel';
 
 import {useRouteData} from './RouteDataProvider';
 
+function updateStringVersion(input: string): string {
+  const regex = / - updated (\d+)$/;
+  const match = input.match(regex);
+
+  if (match) {
+    const version = parseInt(match[1], 10);
+    return input.replace(regex, ` - updated ${version + 1}`);
+  } else {
+    return `${input} - updated 1`;
+  }
+}
+
 function DetailPane() {
-    const {data, isLoading, error} = useRouteData();
+  const {data, isLoading, error, update} = useRouteData();
+
+  const performUpdate = () => {
+    if (data) {
+      const updatedRecord = {
+        ...data?.detail,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        name: updateStringVersion((data?.detail as Record<string, any>).name),
+      };
+      update(data?.type, updatedRecord);
+    } else {
+      console.error('No data available to update');
+    }
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -16,10 +41,14 @@ function DetailPane() {
 
     return (
       <>
-        <div>{type} Editor</div>
-        <pre>
-          {JSON.stringify(detail, null, 2)}
-        </pre>
+        <div>{type} Editor xxx</div>
+        <button
+          onClick={performUpdate}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Update
+        </button>
+        <pre>{JSON.stringify(detail, null, 2)}</pre>
       </>
     );
   }

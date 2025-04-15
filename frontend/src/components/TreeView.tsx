@@ -1,3 +1,4 @@
+import {PlusCircleIcon} from '@heroicons/react/24/outline';
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 
@@ -47,13 +48,13 @@ function TreeNodeComponent({node, path = '', root = true}: TreeNodeProps) {
       <div className={`${root ? '' : 'pl-3'}`}>
         {Object.entries(node.children).map(([key, children]) => (
           <div key={key}>
-            <div className="text-red-500 font-bold">
-              {key}{' '}
+            <div className="text-red-500 font-bold flex items-center">
+              {key}
               <button
-                className="ml-1 w-6 h-6 bg-blue-500 text-white text-sm items-center justify-center rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="ml-1 inline-flex items-center justify-center bg-transparent p-0 hover:bg-gray-100 rounded-full"
                 title={`Add ${key}`}
               >
-                +
+                <PlusCircleIcon className="size-6 text-blue-500 hover:text-blue-700" />
               </button>
             </div>
             {children.map((child: TreeNode) => (

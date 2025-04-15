@@ -25,6 +25,19 @@ export class MockService implements IService {
 
     return Promise.resolve({tree, type, detail});
   }
+
+  update(path: string, type: string, record: AnyRecord): Promise<MasterDetailData> {
+    const records = this.data[type];
+    if (records) {
+      if (!(record.id in records)) {
+        throw new Error(`Record not found: ${type} ${record.id}`);
+      }
+      records[record.id] = record;
+    } else {
+      throw new Error(`Type not found: ${type}`);
+    }
+    return this.getData(path);
+  }
 }
 
 type PathStep = {type: string; id: PrimaryKey};
