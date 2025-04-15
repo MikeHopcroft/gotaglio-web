@@ -97,6 +97,9 @@ export function expand(
     const {type, id} = path[i];
 
     const record = data[type][id];
+    if (id == undefined) {
+      return;
+    }
     const child = parent.children[type].find(node => node.id === id);
     if (!child) {
       throw new Error(`Child not found: ${type} ${id}`);

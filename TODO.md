@@ -3,6 +3,7 @@
 // npx tsx src/test.ts
 
 Top
+* x NavLinks should replace
 * Error updating runlog: DetailPane.tsx:9 Uncaught TypeError: Cannot read properties of undefined (reading 'match')
     at updateStringVersion (DetailPane.tsx:9:23)
     at performUpdate (DetailPane.tsx:27:15)
@@ -16,9 +17,9 @@ Top
 * Delete
   * Navigate to parent node?
 * Handle /frame/projects, /frame/projects1/suites, etc. where specific detail is not selected
-  * Modify convert() to use paths with type but no id
+  * x Modify convert() to use paths with type but no id
   * Handle case where there is no instance of child type
-  * Add NavLinks to type grouping nodes
+  * x Add NavLinks to type grouping nodes
   * Modify Detail or (TypeDetail components) to render instructions
 * Rename RecordEditor to CaseEditor
 * Port CaseEditor to use mock store.

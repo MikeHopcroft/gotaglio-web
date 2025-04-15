@@ -38,6 +38,7 @@ function TreeNodeComponent({node, path = '', root = true}: TreeNodeProps) {
           <NavLink
             to={fullPath}
             end
+            replace
             title={node.description}
             className={({isActive}) => (isActive ? 'active' : 'inactive')}
           >
@@ -49,7 +50,16 @@ function TreeNodeComponent({node, path = '', root = true}: TreeNodeProps) {
         {Object.entries(node.children).map(([key, children]) => (
           <div key={key}>
             <div className="text-red-500 font-bold flex items-center">
-              {key}
+              <NavLink
+                to={`${fullPath}${key}/`}
+                end
+                replace
+                title={node.description}
+                className={({isActive}) => (isActive ? 'active' : 'inactive')}
+              >
+                {key}
+              </NavLink>
+
               <button
                 className="ml-1 inline-flex items-center justify-center bg-transparent p-0 hover:bg-gray-100 rounded-full"
                 title={`Add ${key}`}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {JSX} from 'react';
 import {BrowserRouter, Outlet, Route, Routes} from 'react-router-dom';
 
 import type {IService} from '../dataModel';
@@ -13,6 +13,65 @@ import {RouteDataProvider} from './RouteDataProvider';
 type AppProps = {
   service: IService;
 };
+type TreeIds = Record<string, string>;
+
+const treeIds: TreeIds = {
+  projects: 'projectId',
+  annotations: 'annotationId',
+  sessions: 'sessionId',
+  suites: 'suiteId',
+  cases: 'caseId',
+  runs: 'runId',
+};
+
+interface TreeSpec {
+  [key: string]: TreeSpec;
+}
+
+const treeSpec: TreeSpec = {
+  projects: {
+    annotations: {
+      sessions: {},
+    },
+    suites: {
+      cases: {},
+    },
+    runs: {},
+  },
+};
+
+type DetailSpec = (type: string) => JSX.Element;
+
+// TODO: can probably remove detailSpec since <DetailPane />
+// can switch on the type. Depends how data driven we want to be.
+function detailSpec(type: string): JSX.Element {
+  if (type === 'cases') {
+    console.log('<RecordEditor />');
+    return <RecordEditor />;
+  } else {
+    console.log('<DetailPane />');
+    return <DetailPane />;
+  }
+}
+
+function buildRoutes(
+  spec: TreeSpec,
+  ids: TreeIds,
+  detail: DetailSpec,
+): JSX.Element[] {
+  return Object.entries(spec).map(([key, value]) => (
+    <>
+      <Route path={key} element={<Outlet />}>
+        <Route path={`:${ids[key]}`} element={<Outlet />}>
+          {value && buildRoutes(value, ids, detail)}
+          <Route index element={detail(key)} />
+        </Route>
+        <Route index element={<DetailPane />} />
+      </Route>
+    </>
+  ));
+}
+
 
 function App({service}: AppProps) {
   return (
@@ -20,18 +79,7 @@ function App({service}: AppProps) {
       <RouteDataProvider service={service}>
         <Routes>
           <Route path="/frame" element={<Frame />}>
-            <Route path="projects/:projectId" element={<Outlet />}>
-              <Route path="annotations/:annotationId" element={<Outlet />}>
-                <Route path="sessions/:sessionId" element={<DetailPane />} />
-                <Route index element={<DetailPane />} />
-              </Route>
-              <Route path="suites/:suiteId" element={<Outlet />}>
-                <Route path="cases/:caseId" element={<RecordEditor />} />
-                <Route index element={<DetailPane />} />
-              </Route>
-              <Route path="runs/:runId" element={<DetailPane />} />
-              <Route index element={<DetailPane />} />
-            </Route>
+            {buildRoutes(treeSpec, treeIds, detailSpec)}
           </Route>
           <Route index element={<Home />} />
         </Routes>
