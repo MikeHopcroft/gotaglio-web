@@ -27,7 +27,7 @@ type RouteDataProviderProps = {
   service: IService;
 };
 
-export function RouteDataProvider({ children, service }: RouteDataProviderProps) {
+function RouteDataProvider({ children, service }: RouteDataProviderProps) {
   const location = useLocation();
   const [data, setData] = useState<MasterDetailData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -141,3 +141,5 @@ export function useRouteData() {
   
   return context;
 }
+
+export default RouteDataProvider;

@@ -1,7 +1,7 @@
 import React from 'react';
 import type {Path} from 'react-hook-form';
 
-import type {FormFields} from '../dataModel';
+import type {FormFields} from '../../dataModel';
 
 import Editor, {FieldsProps} from './Editor';
 

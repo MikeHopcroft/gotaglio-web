@@ -1,8 +1,8 @@
 import React from 'react';
 
-import type {MasterDetailData} from '../dataModel';
+import type {MasterDetailData} from '../../dataModel';
 
-import {useRouteData} from './RouteDataProvider';
+import {useRouteData} from '../RouteDataProvider';
 
 function updateStringVersion(input: string): string {
   const regex = / - updated (\d+)$/;
@@ -16,7 +16,7 @@ function updateStringVersion(input: string): string {
   }
 }
 
-function DetailPane() {
+function DebugPane() {
   const {data, isLoading, error, update} = useRouteData();
 
   const performUpdate = () => {
@@ -55,4 +55,4 @@ function DetailPane() {
   }
 }
 
-export default DetailPane;
+export default DebugPane;

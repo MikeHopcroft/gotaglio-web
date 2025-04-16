@@ -3,7 +3,8 @@
 // npx tsx src/test.ts
 
 Top
-* Deprecate concept of DetailSpec
+* Delete DebugPane
+* x Deprecate concept of DetailSpec
 * x NavLinks should replace
 * Error updating runlog
   * DIAGNOSIS: this is because performUpdate is hard-coded to access `name` property which doesn't exist on runlog.
@@ -13,7 +14,7 @@ Top
 * Form editing
   * Better components for form
     * x Delete button in navbar
-    * Component that implements form
+    * x Component that implements form
     * TextArea (w/optional buttons)
     * Select
     * Array

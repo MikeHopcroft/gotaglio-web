@@ -1,18 +1,18 @@
 import React from 'react';
 import type {Path} from 'react-hook-form';
 
-import type {FormFields} from '../dataModel';
+import type {FormFields} from '../../dataModel';
 
 import Editor, {FieldsProps} from './Editor';
 
-function SuiteEditor() {
+function ProjectEditor() {
   return (<Editor defaultValues={{name: '', description: '', instructions: '', template: ''}} fields={x}/>)
 }
 
 const x = <FORM extends FormFields>({control}:FieldsProps<FORM>) => {
   return (
     <>
-      <h1>Suite Editor</h1>
+      <h1>Project Editor</h1>
       <label className="text-xs text-gray-500 mt-1 block m-0">Name</label>
       <div className="flex space-x-2 items-start">
         <div className="flex-1">
@@ -42,4 +42,4 @@ const x = <FORM extends FormFields>({control}:FieldsProps<FORM>) => {
   );
 }
 
-export default SuiteEditor;
+export default ProjectEditor;
