@@ -4,13 +4,14 @@ import {BrowserRouter, Outlet, Route, Routes} from 'react-router-dom';
 import type {IService} from '../dataModel';
 
 import './App.css';
+import AnnotationEditor from './AnnotationEditor';
 import DetailPane from './DetailPane';
-import Editor, {ProjectFields, SuiteFields} from './Editor';
+import Editor, {ProjectFields} from './Editor';
 import Frame from './Frame';
 import Home from './Home';
-// import ProjectEditor from './ProjectEditor';
 import RecordEditor from './RecordEditor';
 import {RouteDataProvider} from './RouteDataProvider';
+import SuiteEditor from './SuiteEditor';
 
 type AppProps = {
   service: IService;
@@ -50,10 +51,12 @@ function detailSpec(type: string): JSX.Element {
   if (type === 'cases') {
     console.log('<RecordEditor />');
     return <RecordEditor />;
+  } else if (type === 'annotations') {
+    return <AnnotationEditor/>;
   } else if (type === 'projects') {
     return <Editor defaultValues={{name: '', description: ''}} fields={ProjectFields}/>;
   } else if (type === 'suites') {
-    return <Editor defaultValues={{name: '', description: ''}} fields={SuiteFields}/>;
+    return <SuiteEditor/>;
   } else {
     console.log('<DetailPane />');
     return <DetailPane />;

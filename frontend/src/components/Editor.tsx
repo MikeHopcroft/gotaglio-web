@@ -8,7 +8,7 @@ import type {AnyRecord, FormFields} from '../dataModel';
 import {useRouteData} from './RouteDataProvider';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type FieldsProps<FORM extends FormFields> = {control: Control<FORM, any>};
+export type FieldsProps<FORM extends FormFields> = {control: Control<FORM, any>};
 type FieldsComponent<FORM extends FormFields> = ({control}:FieldsProps<FORM>) => JSX.Element;
 
 type EditorProps<FORM extends FormFields> = {
