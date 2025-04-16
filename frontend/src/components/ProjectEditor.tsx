@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {useForm, FormProvider} from 'react-hook-form';
 
 import type {MasterDetailData, PrimaryKey, Project} from '../dataModel';
@@ -13,6 +13,7 @@ type FormValues = {
 
 function ProjectEditor() {
   const {data, isLoading, error, update} = useRouteData();
+  const previousPathRef = useRef<string | null>(null);
 
   const methods = useForm<FormValues>({
     defaultValues: {
@@ -22,23 +23,28 @@ function ProjectEditor() {
     },
   });
   const {control, handleSubmit, reset, watch} = methods;
-  // const isInitialLoad = useRef(true);
 
   // Load data from useRouteData
   useEffect(() => {
     console.log('ProjectEditor: useEffect triggered');
     console.log(`ProjectEditor: data: ${JSON.stringify(data, null, 2)}`);
-    // TODO: REVIEW
-    // Originally, the code was
-    if (data !== null) {
-    // Added data.detail !== null to avoid error
-    // Repro: 
-    //   1. Navigate to http://localhost:5173/frame/projects/1/
-    //   2. Click on `suites` (or any red, grouping node)
-    //   3. Click on `Project 1`
-    // if (data !== null && data.detail !== undefined) {
-      const {id, name, description} = data.detail as Project;
-      reset({id, name, description});
+    
+    // Ensure we have valid data and the correct type before updating form
+    if (data !== null && data.detail !== null && data.type === 'projects') {
+      try {
+        const project = data.detail as Project;
+        const {id, name, description} = project;
+        
+        console.log(`Resetting form with project data: ${JSON.stringify({id, name, description}, null, 2)}`);
+        
+        // Use setTimeout to ensure this happens in the next event loop tick
+        // This helps avoid race conditions with React's rendering
+        setTimeout(() => {
+          reset({id, name, description});
+        }, 0);
+      } catch (err) {
+        console.error('Error setting form data:', err);
+      }
     }
   }, [data, reset]);
 
@@ -47,12 +53,8 @@ function ProjectEditor() {
       const updatedData = {
         ...data.detail,
         ...detail
-        // id: detail.id,
-        // name: detail.name,
-        // description: detail.description,
       };
       update(data?.type, updatedData);
-      // update(data?.type, detail as Project);
     } else {
       console.error('No data available to update');
     }
@@ -62,9 +64,11 @@ function ProjectEditor() {
     return <div>Loading...</div>;
   } else if (error) {
     return <div>Error: {error.message}</div>;
+  } else if (!data || !data.detail) {
+    return <div>No data available</div>;
+  } else if (data.type !== 'projects') {
+    return <div>Invalid data type: expected 'projects', got '{data.type}'</div>;
   } else {
-    // const {detail, type} = data as MasterDetailData;
-
     return (
       <>
         <FormProvider {...methods}>
