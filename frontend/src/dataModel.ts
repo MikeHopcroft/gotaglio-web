@@ -9,6 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 export type PrimaryKey = number;
 
+export type FormFields = Record<string, any>;
 export interface BaseRecord {
   id: PrimaryKey;
   children: Record<string, PrimaryKey[]>;
@@ -16,6 +17,22 @@ export interface BaseRecord {
 
 export type AnyRecord = Project | Suite | Case | Annotation | Session | RunLog;
 
+// Consider making generic record/form editor work on a `fields`
+// property that contains all of the fields not in BaseRecord.
+// This way form update can't change id or children.
+// For example,
+//
+// export interface Project extends BaseRecord {
+//   fields: {
+//     name: string;
+//     description: string;
+//   };
+//   children: {
+//     suites: PrimaryKey[];
+//     annotations: PrimaryKey[];
+//     runs: PrimaryKey[];
+//   };
+// }
 export interface Project extends BaseRecord {
   name: string;
   description: string;
@@ -85,13 +102,17 @@ export interface TreeNode {
 }
 
 export type MasterDetailData = {
-  tree: TreeNode, 
-  type: string, 
-  detail: AnyRecord,
-  path: string  // The path used to create this data
+  tree: TreeNode;
+  type: string;
+  detail: AnyRecord;
+  path: string; // The path used to create this data
 };
 
 export interface IService {
   getData(path: string): Promise<MasterDetailData>;
-  update(path: string, type: string, record: AnyRecord): Promise<MasterDetailData>
+  update(
+    path: string,
+    type: string,
+    record: AnyRecord,
+  ): Promise<MasterDetailData>;
 }

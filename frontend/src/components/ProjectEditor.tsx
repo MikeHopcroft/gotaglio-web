@@ -3,6 +3,7 @@ import {useForm, FormProvider} from 'react-hook-form';
 import {useLocation} from 'react-router-dom';
 
 import type {PrimaryKey, Project} from '../dataModel';
+import type {DefaultValues} from 'react-hook-form';
 
 import {useRouteData} from './RouteDataProvider';
 
@@ -12,6 +13,7 @@ type FormValues = {
   description: string;
 };
 
+// TODO: Parameterize with type and value of defaultValues.
 function ProjectEditor() {
   const {data, isLoading, error, update} = useRouteData();
   const location = useLocation();
@@ -21,7 +23,7 @@ function ProjectEditor() {
       id: 0,
       name: '',
       description: '',
-    },
+    } as DefaultValues<FormValues>,
   });
   const {control, handleSubmit, reset, watch} = methods;
 
@@ -37,6 +39,7 @@ function ProjectEditor() {
       return;
     }
 
+    // TODO: remove this check - it is redundant.
     // Check if we're viewing a project
     if (data.type !== 'projects') {
       console.log(`ProjectEditor: Not a project (type: ${data.type}), skipping form reset`);
@@ -51,6 +54,9 @@ function ProjectEditor() {
 
     // Path and data are consistent, proceed with form reset
     try {
+      // TODO: these two lines of code are here because id and children
+      // are co-mingled with the other form fields. Parameterizing class
+      // with defaultValues would allow us to avoid this.
       const project = data.detail as Project;
       const {id, name, description} = project;
       
@@ -78,6 +84,8 @@ function ProjectEditor() {
     }
   };
 
+  // TODO: review this long list of if/else statements.
+  // Are they all needed?
   if (isLoading) {
     return <div>Loading...</div>;
   } else if (error) {
@@ -90,12 +98,15 @@ function ProjectEditor() {
     return <div>Path mismatch: expected '{location.pathname}', got '{data.path}'</div>;
   } else {
     return (
+      // TODO: remove the <> and </> tags.
       <>
         <FormProvider {...methods}>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="p-4 max-w-xl mx-auto space-y-4"
           >
+            {/* TODO: render children here. */}
+            {/* TODO: how is control passed down / made available to children JSX? */}
             <label className="text-xs text-gray-500 mt-1 block m-0">
               Name
             </label>
