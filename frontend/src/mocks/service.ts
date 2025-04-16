@@ -23,7 +23,8 @@ export class MockService implements IService {
     const {type, id} = path[path.length - 1];
     const detail = this.data[type][id];
 
-    return Promise.resolve({tree, type, detail});
+    // Include the path in the returned data
+    return Promise.resolve({tree, type, detail, path: pathName});
   }
 
   update(path: string, type: string, record: AnyRecord): Promise<MasterDetailData> {

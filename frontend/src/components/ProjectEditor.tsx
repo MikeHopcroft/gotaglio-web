@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {useForm, FormProvider} from 'react-hook-form';
 import {useLocation} from 'react-router-dom';
 
-import type {MasterDetailData, PrimaryKey, Project, TreeNode} from '../dataModel';
+import type {PrimaryKey, Project} from '../dataModel';
 
 import {useRouteData} from './RouteDataProvider';
 
@@ -12,37 +12,8 @@ type FormValues = {
   description: string;
 };
 
-// Helper function to extract the project ID from the current path
-function getProjectIdFromPath(path: string): number | null {
-  // Expected path format: /frame/projects/:projectId/ or /frame/projects/:projectId
-  const matches = path.match(/\/frame\/projects\/(\d+)/);
-  if (matches && matches[1]) {
-    return parseInt(matches[1], 10);
-  }
-  return null;
-}
-
-// Helper function to find a node in the tree
-function findNodeInTree(tree: TreeNode, type: string, id: number): boolean {
-  // Check if this is the node we're looking for
-  if (tree.type === type && tree.id === id) {
-    return true;
-  }
-
-  // Check children
-  for (const [childType, children] of Object.entries(tree.children)) {
-    for (const child of children) {
-      if (findNodeInTree(child, type, id)) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
 function ProjectEditor() {
-  const {data, isLoading, error, update, routePath} = useRouteData();
+  const {data, isLoading, error, update} = useRouteData();
   const location = useLocation();
 
   const methods = useForm<FormValues>({
@@ -58,7 +29,6 @@ function ProjectEditor() {
   useEffect(() => {
     console.log('ProjectEditor: useEffect triggered');
     console.log(`ProjectEditor: data: ${JSON.stringify(data, null, 2)}`);
-    console.log(`ProjectEditor: routePath: ${routePath}`);
     console.log(`ProjectEditor: location.pathname: ${location.pathname}`);
     
     // Skip if data is not available yet
@@ -73,21 +43,9 @@ function ProjectEditor() {
       return;
     }
 
-    // Verify that the current path matches the project in data.detail
-    const projectId = getProjectIdFromPath(location.pathname);
-    if (projectId === null) {
-      console.log('ProjectEditor: Could not extract project ID from path');
-      return;
-    }
-
-    if (data.detail.id !== projectId) {
-      console.log(`ProjectEditor: Project ID mismatch: path=${projectId}, data=${data.detail.id}`);
-      return;
-    }
-
-    // Verify the project exists in the tree
-    if (!findNodeInTree(data.tree, 'projects', projectId)) {
-      console.log(`ProjectEditor: Project ID ${projectId} not found in tree`);
+    // Verify that the current path matches the data path
+    if (data.path !== location.pathname) {
+      console.log(`ProjectEditor: Path mismatch: current=${location.pathname}, data=${data.path}`);
       return;
     }
 
@@ -106,7 +64,7 @@ function ProjectEditor() {
     } catch (err) {
       console.error('ProjectEditor: Error setting form data:', err);
     }
-  }, [data, reset, location.pathname, routePath]);
+  }, [data, reset, location.pathname]);
 
   const onSubmit = (detail: FormValues) => {
     if (data) {
@@ -128,6 +86,8 @@ function ProjectEditor() {
     return <div>No data available</div>;
   } else if (data.type !== 'projects') {
     return <div>Invalid data type: expected 'projects', got '{data.type}'</div>;
+  } else if (data.path !== location.pathname) {
+    return <div>Path mismatch: expected '{location.pathname}', got '{data.path}'</div>;
   } else {
     return (
       <>

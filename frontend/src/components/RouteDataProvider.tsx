@@ -9,7 +9,6 @@ type RouteDataContextType = {
   data: MasterDetailData | null;
   isLoading: boolean;
   error: Error | null;
-  routePath: string; // Renamed for clarity - this is the path associated with the current data
   reload: () => void;
   update: (type: string, record: AnyRecord) => Promise<void>;
 };
@@ -19,7 +18,6 @@ const RouteDataContext = createContext<RouteDataContextType>({
   data: null,
   isLoading: false,
   error: null,
-  routePath: '',
   reload: () => {},
   update: () => Promise.resolve(),
 });
@@ -35,7 +33,6 @@ export function RouteDataProvider({ children, service }: RouteDataProviderProps)
   const [data, setData] = useState<MasterDetailData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [routePath, setRoutePath] = useState<string>(''); // Renamed for clarity
   
   // Use ref to track previous pathname and prevent race conditions
   const prevPathnameRef = useRef<string | null>(null);
@@ -57,12 +54,11 @@ export function RouteDataProvider({ children, service }: RouteDataProviderProps)
     try {
       const result = await service.getData(requestedPath);
       console.log(`RouteDataProvider: Data fetched successfully for path: ${requestedPath}`);
-      console.log(`RouteDataProvider: Data: ${JSON.stringify(result, null, 2)}`);
+      console.log(`RouteDataProvider: Data path: ${result.path}`);
       
       // Only update if we're still on the same path
       if (requestedPath === location.pathname) {
         setData(result);
-        setRoutePath(requestedPath);
         console.log(`RouteDataProvider: Data set successfully for path: ${requestedPath}`);
       } else {
         console.log(`RouteDataProvider: Path changed during fetch, discarding results for: ${requestedPath}`);
@@ -112,8 +108,8 @@ export function RouteDataProvider({ children, service }: RouteDataProviderProps)
     try {
       const locationPath = location.pathname;
       const result = await service.update(locationPath, type, record);
+      // The updated result already contains the path from the service
       setData(result);
-      setRoutePath(locationPath);
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
     } finally {
@@ -125,7 +121,6 @@ export function RouteDataProvider({ children, service }: RouteDataProviderProps)
     data,
     isLoading,
     error,
-    routePath, // Renamed for clarity
     reload,
     update
   };
