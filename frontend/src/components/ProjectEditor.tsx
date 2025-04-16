@@ -1,7 +1,8 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 import {useForm, FormProvider} from 'react-hook-form';
+import {useLocation} from 'react-router-dom';
 
-import type {MasterDetailData, PrimaryKey, Project} from '../dataModel';
+import type {MasterDetailData, PrimaryKey, Project, TreeNode} from '../dataModel';
 
 import {useRouteData} from './RouteDataProvider';
 
@@ -11,9 +12,38 @@ type FormValues = {
   description: string;
 };
 
+// Helper function to extract the project ID from the current path
+function getProjectIdFromPath(path: string): number | null {
+  // Expected path format: /frame/projects/:projectId/ or /frame/projects/:projectId
+  const matches = path.match(/\/frame\/projects\/(\d+)/);
+  if (matches && matches[1]) {
+    return parseInt(matches[1], 10);
+  }
+  return null;
+}
+
+// Helper function to find a node in the tree
+function findNodeInTree(tree: TreeNode, type: string, id: number): boolean {
+  // Check if this is the node we're looking for
+  if (tree.type === type && tree.id === id) {
+    return true;
+  }
+
+  // Check children
+  for (const [childType, children] of Object.entries(tree.children)) {
+    for (const child of children) {
+      if (findNodeInTree(child, type, id)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 function ProjectEditor() {
-  const {data, isLoading, error, update} = useRouteData();
-  const previousPathRef = useRef<string | null>(null);
+  const {data, isLoading, error, update, routePath} = useRouteData();
+  const location = useLocation();
 
   const methods = useForm<FormValues>({
     defaultValues: {
@@ -28,25 +58,55 @@ function ProjectEditor() {
   useEffect(() => {
     console.log('ProjectEditor: useEffect triggered');
     console.log(`ProjectEditor: data: ${JSON.stringify(data, null, 2)}`);
+    console.log(`ProjectEditor: routePath: ${routePath}`);
+    console.log(`ProjectEditor: location.pathname: ${location.pathname}`);
     
-    // Ensure we have valid data and the correct type before updating form
-    if (data !== null && data.detail !== null && data.type === 'projects') {
-      try {
-        const project = data.detail as Project;
-        const {id, name, description} = project;
-        
-        console.log(`Resetting form with project data: ${JSON.stringify({id, name, description}, null, 2)}`);
-        
-        // Use setTimeout to ensure this happens in the next event loop tick
-        // This helps avoid race conditions with React's rendering
-        setTimeout(() => {
-          reset({id, name, description});
-        }, 0);
-      } catch (err) {
-        console.error('Error setting form data:', err);
-      }
+    // Skip if data is not available yet
+    if (!data || !data.detail) {
+      console.log('ProjectEditor: No data available, skipping form reset');
+      return;
     }
-  }, [data, reset]);
+
+    // Check if we're viewing a project
+    if (data.type !== 'projects') {
+      console.log(`ProjectEditor: Not a project (type: ${data.type}), skipping form reset`);
+      return;
+    }
+
+    // Verify that the current path matches the project in data.detail
+    const projectId = getProjectIdFromPath(location.pathname);
+    if (projectId === null) {
+      console.log('ProjectEditor: Could not extract project ID from path');
+      return;
+    }
+
+    if (data.detail.id !== projectId) {
+      console.log(`ProjectEditor: Project ID mismatch: path=${projectId}, data=${data.detail.id}`);
+      return;
+    }
+
+    // Verify the project exists in the tree
+    if (!findNodeInTree(data.tree, 'projects', projectId)) {
+      console.log(`ProjectEditor: Project ID ${projectId} not found in tree`);
+      return;
+    }
+
+    // Path and data are consistent, proceed with form reset
+    try {
+      const project = data.detail as Project;
+      const {id, name, description} = project;
+      
+      console.log(`ProjectEditor: Resetting form with project data: ${JSON.stringify({id, name, description}, null, 2)}`);
+      
+      // Use setTimeout to ensure this happens in the next event loop tick
+      // This helps avoid race conditions with React's rendering
+      setTimeout(() => {
+        reset({id, name, description});
+      }, 0);
+    } catch (err) {
+      console.error('ProjectEditor: Error setting form data:', err);
+    }
+  }, [data, reset, location.pathname, routePath]);
 
   const onSubmit = (detail: FormValues) => {
     if (data) {

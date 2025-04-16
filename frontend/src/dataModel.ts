@@ -84,9 +84,12 @@ export interface TreeNode {
   children: Record<string, TreeNode[]>;
 }
 
+// TODO: add a path field to MasterDetailData.
 export type MasterDetailData = {tree: TreeNode, type: string, detail: AnyRecord};
 
 export interface IService {
+  // TODO: modify getData() to return a MasterDetailData object that also includes
+  // the path. This will allow one to screen out inconsistencies from race conditions.
   getData(path: string): Promise<MasterDetailData>;
   update(path: string, type: string, record: AnyRecord): Promise<MasterDetailData>
 }

@@ -9,7 +9,7 @@ type RouteDataContextType = {
   data: MasterDetailData | null;
   isLoading: boolean;
   error: Error | null;
-  currentPath: string; // Added to track the current path explicitly
+  routePath: string; // Renamed for clarity - this is the path associated with the current data
   reload: () => void;
   update: (type: string, record: AnyRecord) => Promise<void>;
 };
@@ -19,7 +19,7 @@ const RouteDataContext = createContext<RouteDataContextType>({
   data: null,
   isLoading: false,
   error: null,
-  currentPath: '',
+  routePath: '',
   reload: () => {},
   update: () => Promise.resolve(),
 });
@@ -35,37 +35,37 @@ export function RouteDataProvider({ children, service }: RouteDataProviderProps)
   const [data, setData] = useState<MasterDetailData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [currentPath, setCurrentPath] = useState<string>('');
+  const [routePath, setRoutePath] = useState<string>(''); // Renamed for clarity
   
   // Use ref to track previous pathname and prevent race conditions
   const prevPathnameRef = useRef<string | null>(null);
   const fetchingRef = useRef<boolean>(false);
   
   // Memoized function to load data
-  const fetchData = useCallback(async (path: string) => {
+  const fetchData = useCallback(async (requestedPath: string) => {
     // Prevent multiple concurrent fetches for the same path
     if (fetchingRef.current) {
-      console.log(`RouteDataProvider: Already fetching data, ignoring request for: ${path}`);
+      console.log(`RouteDataProvider: Already fetching data, ignoring request for: ${requestedPath}`);
       return;
     }
     
-    console.log(`RouteDataProvider: Fetching data for path: ${path}`);
+    console.log(`RouteDataProvider: Fetching data for path: ${requestedPath}`);
     setIsLoading(true);
     setError(null);
     fetchingRef.current = true;
     
     try {
-      const result = await service.getData(path);
-      console.log(`RouteDataProvider: Data fetched successfully for path: ${path}`);
+      const result = await service.getData(requestedPath);
+      console.log(`RouteDataProvider: Data fetched successfully for path: ${requestedPath}`);
       console.log(`RouteDataProvider: Data: ${JSON.stringify(result, null, 2)}`);
       
       // Only update if we're still on the same path
-      if (path === location.pathname) {
+      if (requestedPath === location.pathname) {
         setData(result);
-        setCurrentPath(path);
-        console.log(`RouteDataProvider: Data set successfully for path: ${path}`);
+        setRoutePath(requestedPath);
+        console.log(`RouteDataProvider: Data set successfully for path: ${requestedPath}`);
       } else {
-        console.log(`RouteDataProvider: Path changed during fetch, discarding results for: ${path}`);
+        console.log(`RouteDataProvider: Path changed during fetch, discarding results for: ${requestedPath}`);
       }
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
@@ -78,12 +78,12 @@ export function RouteDataProvider({ children, service }: RouteDataProviderProps)
   // Effect for pathname changes
   useEffect(() => {
     // Current pathname from location
-    const currentPathname = location.pathname;
+    const currentLocationPath = location.pathname;
     
     // Only fetch if pathname has changed
-    if (currentPathname !== prevPathnameRef.current) {
-      console.log(`RouteDataProvider: Path changed from ${prevPathnameRef.current} to ${currentPathname}`);
-      prevPathnameRef.current = currentPathname;
+    if (currentLocationPath !== prevPathnameRef.current) {
+      console.log(`RouteDataProvider: Path changed from ${prevPathnameRef.current} to ${currentLocationPath}`);
+      prevPathnameRef.current = currentLocationPath;
       
       // Clear data and set loading state before fetching new data
       setData(null);
@@ -91,16 +91,16 @@ export function RouteDataProvider({ children, service }: RouteDataProviderProps)
       
       // Add a small delay to ensure state updates have propagated
       setTimeout(() => {
-        fetchData(currentPathname);
+        fetchData(currentLocationPath);
       }, 10);
     }
   }, [location.pathname, fetchData]);
   
   // Manual reload function
   const reload = useCallback(() => {
-    const currentPath = location.pathname;
-    console.log(`RouteDataProvider: Manual reload triggered for path: ${currentPath}`);
-    fetchData(currentPath);
+    const locationPath = location.pathname;
+    console.log(`RouteDataProvider: Manual reload triggered for path: ${locationPath}`);
+    fetchData(locationPath);
   }, [location.pathname, fetchData]);
   
   // Update function
@@ -110,10 +110,10 @@ export function RouteDataProvider({ children, service }: RouteDataProviderProps)
     setError(null);
     
     try {
-      const currentPath = location.pathname;
-      const result = await service.update(currentPath, type, record);
+      const locationPath = location.pathname;
+      const result = await service.update(locationPath, type, record);
       setData(result);
-      setCurrentPath(currentPath);
+      setRoutePath(locationPath);
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
     } finally {
@@ -125,7 +125,7 @@ export function RouteDataProvider({ children, service }: RouteDataProviderProps)
     data,
     isLoading,
     error,
-    currentPath,
+    routePath, // Renamed for clarity
     reload,
     update
   };
