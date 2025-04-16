@@ -27,7 +27,11 @@ export class MockService implements IService {
     return Promise.resolve({tree, type, detail, path: pathName});
   }
 
-  update(path: string, type: string, record: AnyRecord): Promise<MasterDetailData> {
+  update(
+    path: string,
+    type: string,
+    record: AnyRecord,
+  ): Promise<MasterDetailData> {
     const records = this.data[type];
     if (records) {
       if (!(record.id in records)) {
@@ -88,7 +92,11 @@ export function convert(
 
     root.children[type] = recordValues.map(record => {
       try {
-        return recordToTreeNode(type, nodeMapping, record);
+        return recordToTreeNode(
+          type,
+          nodeMapping,
+          record as BaseRecord<any, any>,
+        );
       } catch (error) {
         console.error(`Error processing record:`, record, error);
         throw error;
@@ -110,7 +118,9 @@ export function expand(
   for (let i = 0; i < path.length; i++) {
     const {type, id} = path[i];
 
-    const record = data[type][id];
+    // Ensure `record` is properly typed as `BaseRecord` at its source
+    const record: BaseRecord<any, Record<string, PrimaryKey[]>> = data[type][id];
+
     if (id == undefined) {
       return;
     }
@@ -126,7 +136,11 @@ export function expand(
     for (const [type, ids] of Object.entries(record.children)) {
       try {
         child.children[type] = ids.map(id =>
-          recordToTreeNode(type, fieldMapping, data[type][id]),
+          recordToTreeNode(
+            type,
+            fieldMapping,
+            data[type][id] as BaseRecord<any, Record<string, PrimaryKey[]>>,
+          ),
         );
       } catch (err) {
         console.error(`Error expanding children for type: ${type}`, err);
@@ -137,16 +151,25 @@ export function expand(
   }
 }
 
-export function recordToTreeNode<TYPE extends string>(
+export function recordToTreeNode<
+  TYPE extends string,
+  FIELDS extends Record<string, any>,
+  CHILDREN extends Record<string, PrimaryKey[]>,
+>(
   type: TYPE,
   mapping: FieldMapping,
-  record: BaseRecord,
+  record: BaseRecord<FIELDS, CHILDREN>,
 ): TreeNode {
-  const node: Record<string, any> = {id: record.id, type, children: {}};
+  const node: Record<string, any> = {
+    id: record.id,
+    type,
+    children: {},
+  };
+  const fields = record.fields;
   for (const field in mapping[type]) {
     const key = fieldMapping[type][field];
-    if (key in record) {
-      node[field] = String((record as Record<string, any>)[key]);
+    if (key in fields) {
+      node[field] = String(fields[key]);
     } else {
       throw new Error(`Field not found: ${type} ${key}`);
     }
@@ -160,5 +183,5 @@ export const fieldMapping: FieldMapping = {
   sessions: {name: 'name', description: 'description'},
   suites: {name: 'name', description: 'description'},
   cases: {name: 'description', description: 'uuid'},
-  runs: {name: 'uuid', description: 'id'},
+  runs: {name: 'uuid', description: 'uuid'},
 };

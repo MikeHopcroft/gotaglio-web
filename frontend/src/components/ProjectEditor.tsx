@@ -2,13 +2,12 @@ import React, {useEffect} from 'react';
 import {useForm, FormProvider} from 'react-hook-form';
 import {useLocation} from 'react-router-dom';
 
-import type {PrimaryKey, Project} from '../dataModel';
+import type {Project} from '../dataModel';
 import type {DefaultValues} from 'react-hook-form';
 
 import {useRouteData} from './RouteDataProvider';
 
 type FormValues = {
-  id: PrimaryKey;
   name: string;
   description: string;
 };
@@ -20,12 +19,11 @@ function ProjectEditor() {
 
   const methods = useForm<FormValues>({
     defaultValues: {
-      id: 0,
       name: '',
       description: '',
     } as DefaultValues<FormValues>,
   });
-  const {control, handleSubmit, reset, watch} = methods;
+  const {control, handleSubmit, reset} = methods;
 
   // Load data from useRouteData
   useEffect(() => {
@@ -39,12 +37,12 @@ function ProjectEditor() {
       return;
     }
 
-    // TODO: remove this check - it is redundant.
-    // Check if we're viewing a project
-    if (data.type !== 'projects') {
-      console.log(`ProjectEditor: Not a project (type: ${data.type}), skipping form reset`);
-      return;
-    }
+    // // TODO: remove this check - it is redundant.
+    // // Check if we're viewing a project
+    // if (data.type !== 'projects') {
+    //   console.log(`ProjectEditor: Not a project (type: ${data.type}), skipping form reset`);
+    //   return;
+    // }
 
     // Verify that the current path matches the data path
     if (data.path !== location.pathname) {
@@ -58,14 +56,13 @@ function ProjectEditor() {
       // are co-mingled with the other form fields. Parameterizing class
       // with defaultValues would allow us to avoid this.
       const project = data.detail as Project;
-      const {id, name, description} = project;
       
-      console.log(`ProjectEditor: Resetting form with project data: ${JSON.stringify({id, name, description}, null, 2)}`);
+      console.log(`ProjectEditor: Resetting form with project data: ${JSON.stringify(project, null, 2)}`);
       
       // Use setTimeout to ensure this happens in the next event loop tick
       // This helps avoid race conditions with React's rendering
       setTimeout(() => {
-        reset({id, name, description});
+        reset(project.fields);
       }, 0);
     } catch (err) {
       console.error('ProjectEditor: Error setting form data:', err);
@@ -73,10 +70,11 @@ function ProjectEditor() {
   }, [data, reset, location.pathname]);
 
   const onSubmit = (detail: FormValues) => {
-    if (data) {
+    if (data && data.detail) {
+      const project = data.detail as Project;
       const updatedData = {
-        ...data.detail,
-        ...detail
+        ...project,
+        fields: detail,
       };
       update(data?.type, updatedData);
     } else {

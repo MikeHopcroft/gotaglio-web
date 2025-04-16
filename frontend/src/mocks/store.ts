@@ -62,8 +62,10 @@ export function buildIndexes(): DataStore {
     const id = projectIds.getNextId();
     const project: Project = {
       id,
-      name: `Project ${id}`,
-      description: `Description for Project ${id}`,
+      fields: {
+        name: `Project ${id}`,
+        description: `Description for Project ${id}`,
+      },
       children: {suites, annotations, runs},
     };
     projects[i] = project;
@@ -81,8 +83,7 @@ export function buildIndexes(): DataStore {
 
     const suite: Suite = {
       id,
-      name: `Suite ${id}`,
-      description: `Description for Suite ${id}`,
+      fields: {name: `Suite ${id}`, description: `Description for Suite ${id}`},
       children: {cases},
     };
     suites[id] = suite;
@@ -104,10 +105,12 @@ export function buildIndexes(): DataStore {
     const uuid = crypto.randomUUID();
     const c: Case = {
       id,
-      uuid,
-      description: `Description for Case ${id}`,
-      keywords: [],
-      turns,
+      fields: {
+        uuid,
+        description: `Description for Case ${id}`,
+        keywords: [],
+        turns,
+      },
       children: {},
     };
     cases[id] = c;
@@ -125,10 +128,12 @@ export function buildIndexes(): DataStore {
 
     const annotation: Annotation = {
       id,
-      name: `Annotation ${id}`,
-      description: `Description for Annotation ${id}`,
-      instructions: `instructions for Annotation ${id}`,
-      template: `Template for Annotation ${id}`,
+      fields: {
+        name: `Annotation ${id}`,
+        description: `Description for Annotation ${id}`,
+        instructions: `instructions for Annotation ${id}`,
+        template: `Template for Annotation ${id}`,
+      },
       children: {sessions},
     };
 
@@ -142,8 +147,10 @@ export function buildIndexes(): DataStore {
   for (let id = 1; id <= sessionIds.getLastId(); id++) {
     const session: Session = {
       id,
-      name: `Session ${id}`,
-      description: `Description for Session ${id}`,
+      fields: {
+        name: `Session ${id}`,
+        description: `Description for Session ${id}`,
+      },
       children: {},
     };
 
@@ -159,9 +166,11 @@ export function buildIndexes(): DataStore {
     const uuid = crypto.randomUUID();
     const run: RunLog = {
       id,
-      uuid,
-      results: [],
-      metadata: {},
+      fields: {
+        uuid,
+        results: [],
+        metadata: {},
+      },
       children: {},
     };
     runs[i] = run;

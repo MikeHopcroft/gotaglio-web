@@ -5,9 +5,10 @@ import type {IService} from '../dataModel';
 
 import './App.css';
 import DetailPane from './DetailPane';
+import Editor, {ProjectFields, SuiteFields} from './Editor';
 import Frame from './Frame';
 import Home from './Home';
-import ProjectEditor from './ProjectEditor';
+// import ProjectEditor from './ProjectEditor';
 import RecordEditor from './RecordEditor';
 import {RouteDataProvider} from './RouteDataProvider';
 
@@ -50,7 +51,9 @@ function detailSpec(type: string): JSX.Element {
     console.log('<RecordEditor />');
     return <RecordEditor />;
   } else if (type === 'projects') {
-    return <ProjectEditor />;
+    return <Editor defaultValues={{name: '', description: ''}} fields={ProjectFields}/>;
+  } else if (type === 'suites') {
+    return <Editor defaultValues={{name: '', description: ''}} fields={SuiteFields}/>;
   } else {
     console.log('<DetailPane />');
     return <DetailPane />;
