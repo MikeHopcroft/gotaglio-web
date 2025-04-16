@@ -7,6 +7,7 @@ import './App.css';
 import DetailPane from './DetailPane';
 import Frame from './Frame';
 import Home from './Home';
+import ProjectEditor from './ProjectEditor';
 import RecordEditor from './RecordEditor';
 import {RouteDataProvider} from './RouteDataProvider';
 
@@ -48,6 +49,8 @@ function detailSpec(type: string): JSX.Element {
   if (type === 'cases') {
     console.log('<RecordEditor />');
     return <RecordEditor />;
+  } else if (type === 'projects') {
+    return <ProjectEditor />;
   } else {
     console.log('<DetailPane />');
     return <DetailPane />;
@@ -60,18 +63,15 @@ function buildRoutes(
   detail: DetailSpec,
 ): JSX.Element[] {
   return Object.entries(spec).map(([key, value]) => (
-    <>
-      <Route path={key} element={<Outlet />}>
-        <Route path={`:${ids[key]}`} element={<Outlet />}>
-          {value && buildRoutes(value, ids, detail)}
-          <Route index element={detail(key)} />
-        </Route>
-        <Route index element={<DetailPane />} />
+    <Route key={key} path={key} element={<Outlet />}>
+      <Route path={`:${ids[key]}`} element={<Outlet />}>
+        {value && buildRoutes(value, ids, detail)}
+        <Route index element={detail(key)} />
       </Route>
-    </>
+      <Route index element={<DetailPane />} />
+    </Route>
   ));
 }
-
 
 function App({service}: AppProps) {
   return (

@@ -77,9 +77,22 @@ export function convert(
   // Populate it with unexpanded root records
   for (const type of roots) {
     const records = data[type];
-    root.children[type] = Object.values(records).map(record =>
-      recordToTreeNode(type, nodeMapping, record),
-    );
+    if (!records) {
+      console.error(`No records found for type: ${type}`);
+      continue;
+    }
+
+    const recordValues = Object.values(records);
+    console.log(`Processing ${recordValues.length} records for type: ${type}`);
+
+    root.children[type] = recordValues.map(record => {
+      try {
+        return recordToTreeNode(type, nodeMapping, record);
+      } catch (error) {
+        console.error(`Error processing record:`, record, error);
+        throw error;
+      }
+    });
   }
 
   expand(data, nodeMapping, root, path);
@@ -105,11 +118,19 @@ export function expand(
       throw new Error(`Child not found: ${type} ${id}`);
     }
 
+    console.log('xxx');
+    console.log(JSON.stringify(record, null, 2));
+    console.log('yyy');
     // Populate it with unexpanded root records
     for (const [type, ids] of Object.entries(record.children)) {
-      child.children[type] = ids.map(id =>
-        recordToTreeNode(type, fieldMapping, data[type][id]),
-      );
+      try {
+        child.children[type] = ids.map(id =>
+          recordToTreeNode(type, fieldMapping, data[type][id]),
+        );
+      } catch (err) {
+        console.error(`Error expanding children for type: ${type}`, err);
+        throw err;
+      }
     }
     parent = child;
   }

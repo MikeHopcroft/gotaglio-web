@@ -3,11 +3,20 @@
 // npx tsx src/test.ts
 
 Top
+* Deprecate concept of DetailSpec
 * x NavLinks should replace
-* Error updating runlog: DetailPane.tsx:9 Uncaught TypeError: Cannot read properties of undefined (reading 'match')
+* Error updating runlog
+  * DIAGNOSIS: this is because performUpdate is hard-coded to access `name` property which doesn't exist on runlog.
+  * DetailPane.tsx:9 Uncaught TypeError: Cannot read properties of undefined (reading 'match')
     at updateStringVersion (DetailPane.tsx:9:23)
     at performUpdate (DetailPane.tsx:27:15)
 * Form editing
+  * Better components for form
+    * x Delete button in navbar
+    * Component that implements form
+    * TextArea (w/optional buttons)
+    * Select
+    * Array
   * Service mock on IndexedDB
     * Button to rebuild mock data in IndexedDB
     * Service gets data from IndexedDB

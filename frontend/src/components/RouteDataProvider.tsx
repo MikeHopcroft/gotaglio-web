@@ -39,12 +39,16 @@ export function RouteDataProvider({ children, service }: RouteDataProviderProps)
   
   // Memoized function to load data
   const fetchData = useCallback(async (path: string) => {
+    console.log(`RouteDataLoader2: Fetching data for path: ${path}`);
     setIsLoading(true);
     setError(null);
     
     try {
       const result = await service.getData(path);
+      console.log(`RouteDataLoader2: Data fetched successfully for path: ${path}`);
+      console.log(`RouteDataLoader2: Data: ${JSON.stringify(result, null, 2)}`);
       setData(result);
+      console.log(`RouteDataLoader2: Data set successfully for path: ${path}`);
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
     } finally {

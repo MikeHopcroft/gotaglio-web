@@ -81,7 +81,7 @@ export default function RecordEditor() {
 
   return (
     <>
-      <div className="p-4 max-w-xl mx-auto space-y-4">
+      <div className="relative p-4 max-w-xl mx-auto space-y-4">
         <h1 className="text-2xl font-bold">Case {watch('id')}</h1>
         <button
           className="absolute top-2 right-2 text-red-500 hover:text-red-700"
