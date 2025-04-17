@@ -14,9 +14,6 @@ export default function TreeView() {
   } else if (error) {
     return <div>Error: {error.message}</div>;
   } else {
-    console.log('aaa');
-    console.log(JSON.stringify(data, null, 2));
-
     return (
       <>
         <TreeNodeComponent node={(data as MasterDetailData).tree} />

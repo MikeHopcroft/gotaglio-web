@@ -1,3 +1,4 @@
+import {PlusCircleIcon} from '@heroicons/react/24/outline';
 import React from 'react';
 import type {Path} from 'react-hook-form';
 
@@ -5,11 +6,35 @@ import type {FormFields} from '../../dataModel';
 
 import Editor, {FieldsProps} from './Editor';
 
-function SuiteEditor() {
-  return (<Editor defaultValues={{name: '', description: '', instructions: '', template: ''}} fields={x}/>)
+function SuiteEditor({group = false}) {
+  if (group) {
+    return (
+      <>
+        <h1 className="h1">Suite Instructions</h1>
+        <p>A <em>Suite</em> is a collection of test cases.</p>
+        <p>
+          Click on any suite to edit or press the
+          <PlusCircleIcon className="inline ml-1 mr-1 size-5 text-blue-500 hover:text-blue-700" />
+          button to start a new Suite.
+        </p>
+      </>
+    );
+  } else {
+    return (
+      <Editor
+        defaultValues={{
+          name: '',
+          description: '',
+          instructions: '',
+          template: '',
+        }}
+        fields={x}
+      />
+    );
+  }
 }
 
-const x = <FORM extends FormFields>({control}:FieldsProps<FORM>) => {
+const x = <FORM extends FormFields>({control}: FieldsProps<FORM>) => {
   return (
     <>
       <h1>Suite Editor</h1>
@@ -40,6 +65,6 @@ const x = <FORM extends FormFields>({control}:FieldsProps<FORM>) => {
       </div>
     </>
   );
-}
+};
 
 export default SuiteEditor;

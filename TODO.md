@@ -3,7 +3,20 @@
 // npx tsx src/test.ts
 
 Top
-* Delete DebugPane
+* Integrate RecordEditor into Editor framework 
+* Editors should provide instructions
+  * x group property - displays intructions for grouping nodes
+  * Markdown display
+  * Ability to display special symbols (create button, delete button)
+* Create
+  * Needs to navigate to new record
+* Delete
+  * x Button in upper right
+  * Hover visuals
+  * Navigate to parent node?
+* Editor.tsx should provide delete-record button
+* x Remove DebugPane
+* . Remove console spew
 * x Deprecate concept of DetailSpec
 * x NavLinks should replace
 * Error updating runlog
@@ -22,10 +35,6 @@ Top
     * Button to rebuild mock data in IndexedDB
     * Service gets data from IndexedDB
     * Service call updates record in IndexedDB
-* Create
-  * Needs to navigate to new record
-* Delete
-  * Navigate to parent node?
 * Handle /frame/projects, /frame/projects1/suites, etc. where specific detail is not selected
   * x Modify convert() to use paths with type but no id
   * Handle case where there is no instance of child type

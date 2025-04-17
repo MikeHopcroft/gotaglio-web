@@ -129,9 +129,6 @@ export function expand(
       throw new Error(`Child not found: ${type} ${id}`);
     }
 
-    console.log('xxx');
-    console.log(JSON.stringify(record, null, 2));
-    console.log('yyy');
     // Populate it with unexpanded root records
     for (const [type, ids] of Object.entries(record.children)) {
       try {

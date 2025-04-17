@@ -50,7 +50,6 @@ export default function RecordEditor() {
     if (raw) {
       try {
         const parsed = JSON.parse(raw);
-        console.log(JSON.stringify(parsed, null, 2));
         reset(parsed);
       } catch {
         console.error('Failed to parse data');

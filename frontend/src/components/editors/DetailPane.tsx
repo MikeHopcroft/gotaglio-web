@@ -9,21 +9,22 @@ import SuiteEditor from './SuiteEditor';
 
 type DetailPaneProps = {
   type: string;
+  group?: boolean;
 };
 
-function DetailPane({type}: DetailPaneProps) {
+function DetailPane({type, group=false}: DetailPaneProps) {
   if (type === 'annotations') {
-    return <AnnotationEditor />;
+    return <AnnotationEditor group={group}/>;
   } else if (type === 'cases') {
     return <RecordEditor />;
   } else if (type === 'projects') {
-    return <ProjectEditor />;
+    return <ProjectEditor group={group} />;
   } else if (type === 'suites') {
-    return <SuiteEditor />;
+    return <SuiteEditor group={group} />;
   } else if (type === 'sessions') {
-    return <SessionEditor />;
+    return <SessionEditor group={group} />;
   } else if (type === 'runs') {
-    return <RunViewer />;
+    return <RunViewer group={group} />;
   } else {
     return <div>Unsupported type {type}.</div>;
   }

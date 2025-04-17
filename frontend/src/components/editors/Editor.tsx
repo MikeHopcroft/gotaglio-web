@@ -1,3 +1,6 @@
+import {
+  TrashIcon,
+} from '@heroicons/react/24/solid';
 import React, {useEffect, JSX} from 'react';
 import {Control, useForm, FormProvider} from 'react-hook-form';
 import {useLocation} from 'react-router-dom';
@@ -34,9 +37,9 @@ function Editor<FORM extends FormFields>({
 
   // Load data from useRouteData
   useEffect(() => {
-    console.log('Editor: useEffect triggered');
-    console.log(`Editor: data: ${JSON.stringify(data, null, 2)}`);
-    console.log(`Editor: location.pathname: ${location.pathname}`);
+    // console.log('Editor: useEffect triggered');
+    // console.log(`Editor: data: ${JSON.stringify(data, null, 2)}`);
+    // console.log(`Editor: location.pathname: ${location.pathname}`);
 
     // Skip if data is not available yet
     if (!data || !data.detail) {
@@ -54,9 +57,9 @@ function Editor<FORM extends FormFields>({
 
     // Path and data are consistent, proceed with form reset
     try {
-      console.log(
-        `Editor: Resetting form with record data: ${JSON.stringify(data.detail, null, 2)}`,
-      );
+      // console.log(
+      //   `Editor: Resetting form with record data: ${JSON.stringify(data.detail, null, 2)}`,
+      // );
 
       // Use setTimeout to ensure this happens in the next event loop tick
       // This helps avoid race conditions with React's rendering
@@ -96,20 +99,33 @@ function Editor<FORM extends FormFields>({
     );
   } else {
     return (
-      <FormProvider {...methods}>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="p-4 max-w-xl mx-auto space-y-4"
-        >
-          {fields({control})}
+      <>
+        <div className="relative p-4 max-w-xl mx-auto space-y-4">
           <button
-            type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+            onClick={() => alert('Delete case')}
+            title="Delete case"
           >
-            Save
+            <TrashIcon className="size-6 text-blue-500" />
           </button>
-        </form>
-      </FormProvider>
+        </div>
+
+
+        <FormProvider {...methods}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="p-4 max-w-xl mx-auto space-y-4"
+          >
+            {fields({control})}
+            <button
+              type="submit"
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              Save
+            </button>
+          </form>
+        </FormProvider>
+      </>
     );
   }
 }

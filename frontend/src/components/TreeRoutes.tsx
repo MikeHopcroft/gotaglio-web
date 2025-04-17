@@ -1,7 +1,6 @@
 import React, {JSX} from 'react';
 import {Outlet, Route} from 'react-router-dom';
 
-import DebugPane from './editors/DebugPane';
 import DetailPane from './editors/DetailPane';
 
 type TreeIds = Record<string, string>;
@@ -42,7 +41,7 @@ function buildRoutesHelper(spec: TreeSpec, ids: TreeIds): JSX.Element[] {
         {value && buildRoutesHelper(value, ids)}
         <Route index element={<DetailPane type={key} />} />
       </Route>
-      <Route index element={<DebugPane />} />
+      <Route index element={<DetailPane type={key} group={true}/>} />
     </Route>
   ));
 }

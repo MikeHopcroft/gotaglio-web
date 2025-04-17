@@ -1,3 +1,4 @@
+import {PlusCircleIcon} from '@heroicons/react/24/outline';
 import React from 'react';
 import type {Path} from 'react-hook-form';
 
@@ -5,8 +6,46 @@ import type {FormFields} from '../../dataModel';
 
 import Editor, {FieldsProps} from './Editor';
 
-function AnnotationsEditor() {
-  return (<Editor defaultValues={{name: '', description: '', instructions: '', template: ''}} fields={x}/>)
+function AnnotationsEditor({group = false}) {
+  if (group) {
+    return (
+      <>
+        <h1 className="h1">Annotation Instructions</h1>
+
+        <p>
+          <em>Annotations</em> define a schema and process for labelling
+          with test cases in <em>Suites</em> and <em>Runs</em>.
+        </p>
+
+        <p>
+          Annotations specify
+          <ul className="list-disc list-inside space-y-2">
+            <li className="text-gray-700">fields to be associated with each test case</li>
+            <li className="text-gray-700">instructions for users labelling cases</li>
+            <li className="text-gray-700">a template for presenting the case to the user</li>
+          </ul>
+        </p>
+
+        <p>
+          Click on any Annotation to edit or press the
+          <PlusCircleIcon className="inline ml-1 mr-1 size-5 text-blue-500 hover:text-blue-700" />
+          button to start a new Annotation.
+        </p>
+      </>
+    );
+  } else {
+    return (
+      <Editor
+        defaultValues={{
+          name: '',
+          description: '',
+          instructions: '',
+          template: '',
+        }}
+        fields={x}
+      />
+    );
+  }
 }
 
 const x = <FORM extends FormFields>({control}: FieldsProps<FORM>) => {

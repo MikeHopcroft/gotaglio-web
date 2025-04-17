@@ -5,11 +5,29 @@ import type {FormFields} from '../../dataModel';
 
 import Editor, {FieldsProps} from './Editor';
 
-function ProjectEditor() {
-  return (<Editor defaultValues={{name: '', description: '', instructions: '', template: ''}} fields={x}/>)
+function ProjectEditor({group = false}) {
+  if (group) {
+    return (
+      <>
+        <h1 className="h1">Project Instructions</h1>
+      </>
+    );
+  } else {
+    return (
+      <Editor
+        defaultValues={{
+          name: '',
+          description: '',
+          instructions: '',
+          template: '',
+        }}
+        fields={x}
+      />
+    );
+  }
 }
 
-const x = <FORM extends FormFields>({control}:FieldsProps<FORM>) => {
+const x = <FORM extends FormFields>({control}: FieldsProps<FORM>) => {
   return (
     <>
       <h1>Project Editor</h1>
@@ -40,6 +58,6 @@ const x = <FORM extends FormFields>({control}:FieldsProps<FORM>) => {
       </div>
     </>
   );
-}
+};
 
 export default ProjectEditor;
