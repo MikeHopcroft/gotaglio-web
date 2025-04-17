@@ -4,19 +4,22 @@ import type {Path} from 'react-hook-form';
 
 import type {FormFields} from '../../dataModel';
 
+import Instructions from '../Instructions';
+import Markdown from '../Markdown';
+
 import Editor, {FieldsProps} from './Editor';
+
+const text = `
+# Suites
+_Suites_ are collections of test cases that are used to evaluate the performance of a model or system.
+`;
 
 function SuiteEditor({group = false}) {
   if (group) {
     return (
       <>
-        <h1 className="h1">Suite Instructions</h1>
-        <p>A <em>Suite</em> is a collection of test cases.</p>
-        <p>
-          Click on any suite to edit or press the
-          <PlusCircleIcon className="inline ml-1 mr-1 size-5 text-blue-500 hover:text-blue-700" />
-          button to start a new Suite.
-        </p>
+        <Markdown>{text}</Markdown>
+        <Instructions type="Suite" />
       </>
     );
   } else {

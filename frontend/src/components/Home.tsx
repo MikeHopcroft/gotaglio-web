@@ -1,21 +1,28 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
+
+import Markdown from './Markdown';
+
+const text = `
+# Gotaglio Web Client
+
+Target scenarios include
+* Author test cases and organize them into suites
+* Annotate cases with user-defined fields for processes ranging from
+feature prioritization to recording user judgements of LLM results.
+* Run pipelines on suites of cases
+* Provide multi-user labelling sessions
+
+Useful links
+* [Suite 1](/frame/projects/1/suites/1/)
+* [Suite 1, case 1](/frame/projects/1/suites/1/cases/1/)
+* [Frame](/frame)
+`;
 
 export default function Home() {
   return (
     <>
-      <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">Gotaglio Web Client</h1>
-      Useful links
-      <ul className="list-disc pl-5">
-        <li>
-          <a href="/frame/projects/1/suites/1/" className="text-blue-500 underline hover:text-blue-700">Suite 1</a>
-        </li>
-        <li>
-          <a href="/frame/projects/1/suites/1/cases/1/" className="text-blue-500 underline hover:text-blue-700">Suite 1, case 1</a>
-        </li>
-        <li>
-          <a href="/frame" className="text-blue-500 underline hover:text-blue-700">Frame</a>
-        </li>
-      </ul>
+      <Markdown>{text}</Markdown>
     </>
   );
 }

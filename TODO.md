@@ -3,11 +3,12 @@
 // npx tsx src/test.ts
 
 Top
+* New run button should create a job
 * Integrate RecordEditor into Editor framework 
 * Editors should provide instructions
   * x group property - displays intructions for grouping nodes
-  * Markdown display
-  * Ability to display special symbols (create button, delete button)
+  * x Markdown display
+  * . Ability to display special symbols (create button, delete button)
 * Create
   * Needs to navigate to new record
 * Delete

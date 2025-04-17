@@ -3,13 +3,24 @@ import type {Path} from 'react-hook-form';
 
 import type {FormFields} from '../../dataModel';
 
+import Instructions from '../Instructions';
+import Markdown from '../Markdown';
+
 import Editor, {FieldsProps} from './Editor';
+
+const text = `
+# Projects
+
+_Projects_ serve as top-level containers for a collection
+of related _Suites_, _Annotations_, and _Runs_.
+`;
 
 function ProjectEditor({group = false}) {
   if (group) {
     return (
       <>
-        <h1 className="h1">Project Instructions</h1>
+        <Markdown>{text}</Markdown>
+        <Instructions type="Project" />
       </>
     );
   } else {
