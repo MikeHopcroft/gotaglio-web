@@ -1,4 +1,3 @@
-import {PlusCircleIcon} from '@heroicons/react/24/outline';
 import React from 'react';
 import type {Path} from 'react-hook-form';
 
@@ -7,7 +6,8 @@ import type {FormFields} from '../../dataModel';
 import Instructions from '../Instructions';
 import Markdown from '../Markdown';
 
-import Editor, {FieldsProps} from './Editor';
+import Editor2 from './Editor2';
+import {useEditorContext} from './EditorProvider';
 
 const text = `
 # Suites
@@ -24,23 +24,25 @@ function SuiteEditor({group = false}) {
     );
   } else {
     return (
-      <Editor
+      <Editor2
         defaultValues={{
           name: '',
           description: '',
           instructions: '',
           template: '',
         }}
-        fields={x}
-      />
+      >
+        <SuiteEditorFields />
+      </Editor2>
     );
   }
 }
 
-const x = <FORM extends FormFields>({control}: FieldsProps<FORM>) => {
+function SuiteEditorFields<FORM extends FormFields>() {
+  const {control} = useEditorContext<FORM>();
   return (
     <>
-      <h1 className='h1'>Suite Editor</h1>
+      <h1 className="h1">Suite Editor</h1>
       <label className="text-xs text-gray-500 mt-1 block m-0">Name</label>
       <div className="flex space-x-2 items-start">
         <div className="flex-1">
@@ -68,6 +70,6 @@ const x = <FORM extends FormFields>({control}: FieldsProps<FORM>) => {
       </div>
     </>
   );
-};
+}
 
 export default SuiteEditor;

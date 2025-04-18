@@ -4,9 +4,9 @@
 
 Top
 * Editors
-  * Remove RecordEditor
-  * Replace Editor with Editor2
-  * Migrate all editors to new model
+  * x Remove RecordEditor
+  * . Replace Editor with Editor2
+  * x Migrate all editors to new model
   * Transition visual - fade to white
   * Is it possible to rely on useFormContext() instead of useEditorContext()?
   * Textarea initial rows based on number of lines?

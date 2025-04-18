@@ -10,10 +10,10 @@ import type {Case} from '../../dataModel';
 
 import Instructions from '../Instructions';
 import Markdown from '../Markdown';
-import { useRouteData } from '../RouteDataProvider';
+import {useRouteData} from '../RouteDataProvider';
 
 import Editor2 from './Editor2';
-import { useEditorContext } from './EditorProvider';
+import {useEditorContext} from './EditorProvider';
 import KeywordsField from './KeywordsField';
 import LLMField2 from './LLMField2';
 
@@ -26,7 +26,7 @@ _Cases_ description goes here.
 `;
 
 function CaseEditor({group = false}) {
-  const { data } = useRouteData();
+  const {data} = useRouteData();
   console.log('CaseEditor: data', data);
 
   if (group) {
@@ -37,7 +37,6 @@ function CaseEditor({group = false}) {
       </>
     );
   } else {
-    
     return (
       <Editor2
         defaultValues={{
@@ -54,7 +53,7 @@ function CaseEditor({group = false}) {
 }
 
 function CaseEditorFields() {
-  const { control } = useEditorContext<FormValues>();
+  const {control} = useEditorContext<FormValues>();
   const {fields, append, remove} = useFieldArray<FormValues>({
     control,
     name: 'turns',
@@ -128,7 +127,9 @@ function CaseEditorFields() {
             <div className="flex-1">
               <textarea
                 className="border px-2 py-1 rounded w-full m-0 bg-white"
-                {...control.register(`turns.${index}.query` as Path<FormValues>)}
+                {...control.register(
+                  `turns.${index}.query` as Path<FormValues>,
+                )}
                 placeholder="User query"
                 rows={3}
               />
@@ -151,6 +152,6 @@ function CaseEditorFields() {
       </button>
     </>
   );
-};
+}
 
 export default CaseEditor;

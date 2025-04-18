@@ -6,7 +6,8 @@ import type {FormFields} from '../../dataModel';
 import Instructions from '../Instructions';
 import Markdown from '../Markdown';
 
-import Editor, {FieldsProps} from './Editor';
+import Editor2 from './Editor2';
+import {useEditorContext} from './EditorProvider';
 
 const text = `
 ## Annotations
@@ -30,23 +31,25 @@ function AnnotationsEditor({group = false}) {
     );
   } else {
     return (
-      <Editor
+      <Editor2
         defaultValues={{
           name: '',
           description: '',
           instructions: '',
           template: '',
         }}
-        fields={x}
-      />
+      >
+        <AnnotationEditorFields />
+      </Editor2>
     );
   }
 }
 
-const x = <FORM extends FormFields>({control}: FieldsProps<FORM>) => {
+function AnnotationEditorFields<FORM extends FormFields>() {
+  const {control} = useEditorContext<FORM>();
   return (
     <>
-      <h1 className='h1'>Annotation Editor</h1>
+      <h1 className="h1">Annotation Editor</h1>
       <label className="text-xs text-gray-500 mt-1 block m-0">Name</label>
       <div className="flex space-x-2 items-start">
         <div className="flex-1">
@@ -102,6 +105,6 @@ const x = <FORM extends FormFields>({control}: FieldsProps<FORM>) => {
       </div>
     </>
   );
-};
+}
 
 export default AnnotationsEditor;

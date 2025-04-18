@@ -3,7 +3,8 @@ import type {Path} from 'react-hook-form';
 
 import type {FormFields} from '../../dataModel';
 
-import Editor, {FieldsProps} from './Editor';
+import Editor2 from './Editor2';
+import {useEditorContext} from './EditorProvider';
 
 function SessionEditor({group = false}) {
   if (group) {
@@ -14,20 +15,22 @@ function SessionEditor({group = false}) {
     );
   } else {
     return (
-      <Editor
+      <Editor2
         defaultValues={{
           name: '',
           description: '',
           instructions: '',
           template: '',
         }}
-        fields={x}
-      />
+      >
+        <SessionEditorFields />
+      </Editor2>
     );
   }
 }
 
-const x = <FORM extends FormFields>({control}: FieldsProps<FORM>) => {
+function SessionEditorFields<FORM extends FormFields>() {
+  const {control} = useEditorContext<FORM>();
   return (
     <>
       <h1>Session Editor</h1>
@@ -58,6 +61,6 @@ const x = <FORM extends FormFields>({control}: FieldsProps<FORM>) => {
       </div>
     </>
   );
-};
+}
 
 export default SessionEditor;

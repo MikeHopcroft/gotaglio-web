@@ -1,13 +1,13 @@
 import React from 'react';
-import type { Path } from 'react-hook-form';
+import type {Path} from 'react-hook-form';
 
-import type { FormFields } from '../../dataModel';
+import type {FormFields} from '../../dataModel';
 
 import Instructions from '../Instructions';
 import Markdown from '../Markdown';
 
 import Editor2 from './Editor2';
-import { useEditorContext } from './EditorProvider';
+import {useEditorContext} from './EditorProvider';
 
 const text = `
 # Projects
@@ -18,7 +18,7 @@ of related _Suites_, _Annotations_, and _Runs_.
 Each _Project_ is associated with a single GoTaglio pipeline.
 `;
 
-function ProjectEditor({ group = false }) {
+function ProjectEditor({group = false}) {
   if (group) {
     return (
       <>
@@ -43,10 +43,10 @@ function ProjectEditor({ group = false }) {
 }
 
 function ProjectEditorFields<FORM extends FormFields>() {
-  const { control } = useEditorContext<FORM>();
+  const {control} = useEditorContext<FORM>();
   return (
     <>
-      <h1 className='h1'>Project Editor</h1>
+      <h1 className="h1">Project Editor</h1>
       <label className="text-xs text-gray-500 mt-1 block m-0">Name</label>
       <div className="flex space-x-2 items-start">
         <div className="flex-1">
