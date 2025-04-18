@@ -8,7 +8,16 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 export type PrimaryKey = number;
-type EmptyObject = Record<string, never>;
+export type EmptyObject = Record<string, never>;
+
+export type Serializable =
+  | string
+  | number
+  | boolean
+  | Serializable[]
+  | { [key: string]: Serializable };
+
+export type SerializableRecord = Record<string, Serializable>;
 
 export type FormFields = Record<string, any>;
 export interface BaseRecord<
@@ -22,22 +31,6 @@ export interface BaseRecord<
 
 export type AnyRecord = Project | Suite | Case | Annotation | Session | RunLog;
 
-// Consider making generic record/form editor work on a `fields`
-// property that contains all of the fields not in BaseRecord.
-// This way form update can't change id or children.
-// For example,
-//
-// export interface Project extends BaseRecord {
-//   fields: {
-//     name: string;
-//     description: string;
-//   };
-//   children: {
-//     suites: PrimaryKey[];
-//     annotations: PrimaryKey[];
-//     runs: PrimaryKey[];
-//   };
-// }
 export type Project = BaseRecord<
   {name: string; description: string},
   {

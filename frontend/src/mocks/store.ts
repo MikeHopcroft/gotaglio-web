@@ -8,6 +8,7 @@ import type {
   PrimaryKey,
   Project,
   RunLog,
+  SerializableRecord,
   Session,
   Suite,
   Turn,
@@ -206,15 +207,6 @@ function getRandomInt(n: number): number {
   return Math.floor(rnd() * n) + 1;
 }
 
-
-type Serializable =
-  | string
-  | number
-  | boolean
-  | Serializable[]
-  | { [key: string]: Serializable };
-
-type SerializableRecord = Record<string, Serializable>;
 
 type Patch = {type: (keyof DataStore) & string, id: PrimaryKey, fields: SerializableRecord}
 

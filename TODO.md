@@ -3,7 +3,6 @@
 // npx tsx src/test.ts
 
 Top
-* x JSON validation error prevents editing in LLMField
 * Consider renaming /frame route segment
 * Editors
   * x Remove RecordEditor
@@ -17,7 +16,6 @@ Top
 * Factor JSON from LLMField
 * New run button should create a job
 * Are sessions immutable after creation?
-* x Integrate RecordEditor into Editor framework 
 * Editors should provide instructions
   * x group property - displays intructions for grouping nodes
   * x Markdown display
@@ -30,6 +28,8 @@ Top
   * . Editor.tsx should provide delete-record button
   * Hover visuals
   * Navigate to parent node?
+* x JSON validation error prevents editing in LLMField
+* x Integrate RecordEditor into Editor framework 
 * x Remove DebugPane
 * . Remove console spew
 * x Deprecate concept of DetailSpec

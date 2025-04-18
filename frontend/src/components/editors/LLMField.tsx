@@ -2,15 +2,33 @@ import {
   ChatBubbleLeftEllipsisIcon,
   ClipboardDocumentCheckIcon,
 } from '@heroicons/react/24/solid';
+import {Serializable} from 'child_process';
 import get from 'lodash/get';
 import React, {useState} from 'react';
 import {
   Controller,
   FieldValues,
   Path,
-  PathValue,
   useFormContext,
 } from 'react-hook-form';
+
+const mockLLMResponse: Serializable = {
+  items: [
+    {
+      name: 'Double Wiseguy',
+      options: [
+        {
+          amount: 'No',
+          name: 'Tomato',
+        },
+        {
+          amount: 'Extra',
+          name: 'Mayo',
+        },
+      ],
+    },
+  ],
+};
 
 type LLMFieldProps<FormValues extends FieldValues> = {
   path: Path<FormValues>;
@@ -27,7 +45,6 @@ function LLMField<FormValues extends FieldValues>({
     formState: {errors},
     getValues,
     setError,
-    setValue,
   } = useFormContext<FormValues>();
 
   const [jsonText, setJsonText] = useState(() =>
@@ -43,20 +60,22 @@ function LLMField<FormValues extends FieldValues>({
 
     try {
       // Simulate an async API call
-      const response = await new Promise<string>((resolve, reject) =>
+      const response = await new Promise<Serializable>((resolve, reject) =>
         setTimeout(() => {
           if (Math.random() > 0.2) {
-            resolve(`Generated response for ${path}`);
+            resolve(mockLLMResponse);
           } else {
             reject(new Error('Failed to fetch response from LLM'));
           }
         }, 2000),
       );
       // Update the agent field with the response
-      setValue(path, response as PathValue<FormValues, Path<FormValues>>, {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
+      setJsonText(JSON.stringify(response, null, 2));
+      setError(path, {message: 'items.0 missing `type` field.'});
+      // setValue(path, response as PathValue<FormValues, Path<FormValues>>, {
+      //   shouldValidate: true,
+      //   shouldDirty: true,
+      // });
     } catch (error) {
       console.error('Error:', error);
       setError(path, error.message || 'Unknown error');
@@ -75,10 +94,8 @@ function LLMField<FormValues extends FieldValues>({
           <Controller
             name={path}
             control={control}
-            render={({
-              field: {onChange, onBlur},
-              fieldState: {error},
-            }) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            render={({field: {onChange, onBlur}, fieldState: {error}}) => {
               return (
                 <div>
                   <textarea
@@ -104,14 +121,14 @@ function LLMField<FormValues extends FieldValues>({
                     }}
                     onBlur={onBlur}
                   />
-                  {parseError && (
+                  {/* {parseError && (
                     <p className="text-red-500 text-sm">
                       Parse error: {parseError}
                     </p>
-                  )}
-                  {error && (
+                  )} */}
+                  {/* {error && (
                     <p className="text-red-500 text-sm">{error.message}</p>
-                  )}
+                  )} */}
                 </div>
               );
             }}
@@ -126,7 +143,10 @@ function LLMField<FormValues extends FieldValues>({
               },
             }}
           />
-          {error && <div className="text-red-500">Error text</div>}
+          {parseError && (
+            <p className="text-red-500 text-sm">Parse error: {parseError}</p>
+          )}
+          {error && <div className="text-red-500">{error.message}</div>}
         </div>
         <div className="flex flex-col space-y-1 w-[100px] shrink-0">
           <button
