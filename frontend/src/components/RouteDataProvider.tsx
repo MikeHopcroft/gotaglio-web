@@ -87,7 +87,7 @@ function RouteDataProvider({ children, service }: RouteDataProviderProps) {
       // Add a small delay to ensure state updates have propagated
       setTimeout(() => {
         fetchData(currentLocationPath);
-      }, 10);
+      }, 1000);
     }
   }, [location.pathname, fetchData]);
   

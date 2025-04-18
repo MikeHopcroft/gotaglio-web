@@ -3,23 +3,31 @@
 // npx tsx src/test.ts
 
 Top
-* Transition visual - fade to white
+* Editors
+  * Remove RecordEditor
+  * Replace Editor with Editor2
+  * Migrate all editors to new model
+  * Transition visual - fade to white
+  * Is it possible to rely on useFormContext() instead of useEditorContext()?
+  * Textarea initial rows based on number of lines?
 * Initial context should be JSON field
 * Factor JSON from LLMField
-* Is it possible to rely on useFormContext() instead of useEditorContext()?
 * New run button should create a job
-* Integrate RecordEditor into Editor framework 
+* Are sessions immutable after creation?
+* x Integrate RecordEditor into Editor framework 
 * Editors should provide instructions
   * x group property - displays intructions for grouping nodes
   * x Markdown display
   * . Ability to display special symbols (create button, delete button)
+* Consider renaming /frame route segment
+* Fast refresh warning for useRouteData() hook
 * Create
   * Needs to navigate to new record
 * Delete
   * x Button in upper right
+  * . Editor.tsx should provide delete-record button
   * Hover visuals
   * Navigate to parent node?
-* Editor.tsx should provide delete-record button
 * x Remove DebugPane
 * . Remove console spew
 * x Deprecate concept of DetailSpec
@@ -50,8 +58,6 @@ Top
 * Port mock store to use LocalStorage.
 * Error at http://localhost:5173/frame: Error: Cannot destructure property 'type' of 'path[(path.length - 1)]' as it is undefined.
 * Error: handle no route found: No routes matched location "/record"
-* Consider renaming /frame route segment
-* Fast refresh warning for useRouteData() hook
 * x Sessions needs route navigation (vs hard-coded sample data) and App.tsx nested route
 * Use path combination library
 * Check route components for safety

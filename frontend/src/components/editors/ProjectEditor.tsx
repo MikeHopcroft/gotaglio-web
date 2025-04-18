@@ -14,6 +14,8 @@ const text = `
 
 _Projects_ serve as top-level containers for a collection
 of related _Suites_, _Annotations_, and _Runs_.
+
+Each _Project_ is associated with a single GoTaglio pipeline.
 `;
 
 function ProjectEditor({ group = false }) {
@@ -44,8 +46,7 @@ function ProjectEditorFields<FORM extends FormFields>() {
   const { control } = useEditorContext<FORM>();
   return (
     <>
-      Hello
-      <h1>Project Editor</h1>
+      <h1 className='h1'>Project Editor</h1>
       <label className="text-xs text-gray-500 mt-1 block m-0">Name</label>
       <div className="flex space-x-2 items-start">
         <div className="flex-1">

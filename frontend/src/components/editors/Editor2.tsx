@@ -81,7 +81,7 @@ function Editor2<FORM extends FormFields>({
   } else {
     return (
       <>
-        <div className="relative p-4 max-w-xl mx-auto space-y-4">
+        <div className="relative p-4 max-w-5xl mx-auto space-y-4">
           <button
             className="absolute top-2 right-2 text-red-500 hover:text-red-700"
             onClick={() => alert('Delete case')}
@@ -94,7 +94,7 @@ function Editor2<FORM extends FormFields>({
         <FormProvider {...methods}>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="p-4 max-w-xl mx-auto space-y-4"
+            className="p-4 max-w-5xl mx-auto space-y-4"
           >
             <EditorProvider formMethods={methods}>
               {children}

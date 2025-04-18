@@ -62,6 +62,7 @@ function CaseEditorFields() {
 
   return (
     <>
+      <h1 className="h1">Case Editor</h1>
       <label className="text-xs text-gray-500 mt-1 block m-0">
         Description
       </label>
