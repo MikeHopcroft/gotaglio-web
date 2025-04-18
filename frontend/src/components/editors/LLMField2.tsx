@@ -3,7 +3,7 @@ import {
   ClipboardDocumentCheckIcon,
 } from '@heroicons/react/24/solid';
 import get from 'lodash/get';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Controller,
   FieldValues,
@@ -25,9 +25,15 @@ export default function LLMField2<FormValues extends FieldValues>({
     clearErrors,
     control,
     formState: {errors},
+    getValues,
     setError,
     setValue,
   } = useFormContext<FormValues>();
+
+  const [jsonText, setJsonText] = useState(() =>
+    JSON.stringify(getValues(path), null, 2),
+  );
+  const [parseError, setParseError] = useState<string | null>(null);
 
   const error = get(errors, path);
 
@@ -70,35 +76,45 @@ export default function LLMField2<FormValues extends FieldValues>({
             name={path}
             control={control}
             render={({
-              field: {onChange, onBlur, value},
+              field: {onChange, onBlur},
               fieldState: {error},
-            }) => (
-              <div>
-                <textarea
-                  className={`border px-2 py-1 rounded w-full ${
-                    loading ? 'bg-gray-100 text-gray-500' : 'bg-white'
-                  }`}
-                  value={JSON.stringify(value, null, 2)}
-                  placeholder="Response"
-                  rows={5}
-                  disabled={loading}
-                  onChange={e => {
-                    try {
-                      const parsed = JSON.parse(e.target.value);
-                      onChange(parsed);
-                    } catch (err) {
-                      // Ignore parse error here – you can handle it with validation if desired
-                      console.log(`LLMField2: Invalid JSON`, err);
-                      onChange(e.target.value);
-                    }
-                  }}
-                  onBlur={onBlur}
-                />
-                {error && (
-                  <p className="text-red-500 text-sm">{error.message}</p>
-                )}
-              </div>
-            )}
+            }) => {
+              return (
+                <div>
+                  <textarea
+                    className={`border px-2 py-1 rounded w-full ${
+                      loading ? 'bg-gray-100 text-gray-500' : 'bg-white'
+                    }`}
+                    value={jsonText}
+                    placeholder="Response"
+                    rows={5}
+                    disabled={loading}
+                    onChange={e => {
+                      const newText = e.target.value;
+                      setJsonText(newText);
+
+                      try {
+                        const parsed = JSON.parse(newText);
+                        setParseError(null);
+                        onChange(parsed); // only update if valid
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      } catch (err: any) {
+                        setParseError(err.message);
+                      }
+                    }}
+                    onBlur={onBlur}
+                  />
+                  {parseError && (
+                    <p className="text-red-500 text-sm">
+                      Parse error: {parseError}
+                    </p>
+                  )}
+                  {error && (
+                    <p className="text-red-500 text-sm">{error.message}</p>
+                  )}
+                </div>
+              );
+            }}
             rules={{
               validate: value => {
                 try {

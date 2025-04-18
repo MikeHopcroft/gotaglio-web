@@ -3,7 +3,7 @@
 // npx tsx src/test.ts
 
 Top
-* JSON validation error prevents editing in LLMField
+* x JSON validation error prevents editing in LLMField
 * Consider renaming /frame route segment
 * Editors
   * x Remove RecordEditor
