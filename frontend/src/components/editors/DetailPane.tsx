@@ -1,8 +1,8 @@
 import React from 'react';
 
 import AnnotationEditor from './AnnotationEditor';
+import CaseEditor from './CaseEditor';
 import ProjectEditor from './ProjectEditor';
-import RecordEditor from './RecordEditor';
 import RunViewer from './RunViewer';
 import SessionEditor from './SessionEditor';
 import SuiteEditor from './SuiteEditor';
@@ -16,7 +16,7 @@ function DetailPane({type, group=false}: DetailPaneProps) {
   if (type === 'annotations') {
     return <AnnotationEditor group={group}/>;
   } else if (type === 'cases') {
-    return <RecordEditor />;
+    return <CaseEditor />;
   } else if (type === 'projects') {
     return <ProjectEditor group={group} />;
   } else if (type === 'suites') {

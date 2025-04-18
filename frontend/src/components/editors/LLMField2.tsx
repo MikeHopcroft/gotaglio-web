@@ -4,15 +4,21 @@ import {
 } from '@heroicons/react/24/solid';
 import get from 'lodash/get';
 import React from 'react';
-import {useFormContext, FieldValues, Path, PathValue} from 'react-hook-form';
+import {
+  Controller,
+  FieldValues,
+  Path,
+  PathValue,
+  useFormContext,
+} from 'react-hook-form';
 
-import { useEditorContext } from './EditorProvider';
+import {useEditorContext} from './EditorProvider';
 
 type LLMFieldProps<FormValues extends FieldValues> = {
   path: Path<FormValues>;
 };
 
-export default function LLMField<FormValues extends FieldValues>({
+export default function LLMField2<FormValues extends FieldValues>({
   path,
 }: LLMFieldProps<FormValues>) {
   const [loading, setLoading] = React.useState(false);
@@ -63,14 +69,48 @@ export default function LLMField<FormValues extends FieldValues>({
       <label className="text-xs text-gray-500">Response</label>
       <div className="flex space-x-2 items-start">
         <div className="flex-1">
-          <textarea
-            className={`border px-2 py-1 rounded w-full ${
-              loading ? 'bg-gray-100 text-gray-500' : 'bg-white'
-            }`}
-            {...control.register(path)}
-            placeholder="Response"
-            rows={3}
-            disabled={loading}
+          <Controller
+            name={path}
+            control={control}
+            render={({
+              field: {onChange, onBlur, value},
+              fieldState: {error},
+            }) => (
+              <div>
+                <textarea
+                  className={`border px-2 py-1 rounded w-full ${
+                    loading ? 'bg-gray-100 text-gray-500' : 'bg-white'
+                  }`}
+                  value={JSON.stringify(value, null, 2)}
+                  placeholder="Response"
+                  rows={5}
+                  disabled={loading}
+                  onChange={e => {
+                    try {
+                      const parsed = JSON.parse(e.target.value);
+                      onChange(parsed);
+                    } catch (err) {
+                      // Ignore parse error here – you can handle it with validation if desired
+                      console.log(`LLMField2: Invalid JSON`, err);
+                    }
+                  }}
+                  onBlur={onBlur}
+                />
+                {error && (
+                  <p className="text-red-500 text-sm">{error.message}</p>
+                )}
+              </div>
+            )}
+            rules={{
+              validate: value => {
+                try {
+                  JSON.stringify(value); // ensure it's serializable
+                  return true;
+                } catch (err) {
+                  return `Invalid JSON object:: ${err.message}`;
+                }
+              },
+            }}
           />
           {error && <div className="text-red-500">Error text</div>}
         </div>

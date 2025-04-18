@@ -98,7 +98,7 @@ export function buildIndexes(): DataStore {
     for (let j = 1; j <= getRandomInt(5); j++) {
       turns.push({
         query: `Query ${j}`,
-        expected: {result: `Expected result ${j}`},
+        expected: {},
       });
     }
 
@@ -176,7 +176,7 @@ export function buildIndexes(): DataStore {
     runs[i] = run;
   }
 
-  return {
+  const dataStore = {
     projects,
     annotations,
     sessions,
@@ -184,6 +184,10 @@ export function buildIndexes(): DataStore {
     cases,
     runs,
   };
+
+  applyPatches(dataStore, patches);
+
+  return dataStore;
 }
 
 class IdAllocator {
@@ -200,4 +204,161 @@ class IdAllocator {
 
 function getRandomInt(n: number): number {
   return Math.floor(rnd() * n) + 1;
+}
+
+
+type Serializable =
+  | string
+  | number
+  | boolean
+  | Serializable[]
+  | { [key: string]: Serializable };
+
+type SerializableRecord = Record<string, Serializable>;
+
+type Patch = {type: (keyof DataStore) & string, id: PrimaryKey, fields: SerializableRecord}
+
+const patches: Patch[] = [
+  {
+    type: 'projects',
+    id: 1,
+    fields: {
+      name: 'Fast food ordering',
+    }
+  },
+  {
+    type: 'projects',
+    id: 2,
+    fields: {
+      name: 'Case augmentation',
+    }
+  },
+  {
+    type: 'suites',
+    id: 1,
+    fields: {
+      name: 'Basic ordering',
+    }
+  },
+  {
+    type: 'suites',
+    id: 2,
+    fields: {
+      name: 'Complex orders',
+    }
+  },
+  {
+    type: 'suites',
+    id: 3,
+    fields: {
+      name: 'Problematic', 
+      description: 'These are broken cases found in the wild. They are under investigation.',
+      keywords: ['problematic'],
+    }
+  },
+  {
+    type: 'cases',
+    id: 1,
+    fields: {
+      description: 'Simple burger order',
+      turns: [
+        {
+          query: "can I a double wiseguy with no tomatoes and extra mayo",
+          expected: {
+            "items": [
+              {
+                "name": "Double Wiseguy",
+                "type": "CHOOSE",
+                "options": [
+                  {
+                    "amount": "No",
+                    "name": "Tomato"
+                  },
+                  {
+                    "amount": "Extra",
+                    "name": "Mayo"
+                  }
+                ]
+              }
+            ]
+          },
+        }
+      ]
+    }
+  },
+  {
+    type: 'cases',
+    id: 2,
+    fields: {
+      description: 'Multistep burger order',
+      keywords: ['multistep'],
+      turns: [
+        {
+          query: "can I a double wiseguy with no tomatoes and extra mayo",
+          expected: {
+            "items": [
+              {
+                "name": "Double Wiseguy",
+                "type": "CHOOSE",
+                "options": [
+                  {
+                    "amount": "No",
+                    "name": "Tomato"
+                  },
+                  {
+                    "amount": "Extra",
+                    "name": "Mayo"
+                  }
+                ]
+              }
+            ]
+          },
+        },
+        {
+          "query": "make that with cheese and bacon",
+          "expected": {
+            "items": [
+              {
+                "name": "Double Wiseguy",
+                "type": "With Bacon and Cheese",
+                "options": [
+                  {
+                    "amount": "No",
+                    "name": "Tomato"
+                  },
+                  {
+                    "amount": "Extra",
+                    "name": "Mayo"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+  
+      ]
+    }
+  }
+
+];
+
+// export function buildPatchedIndexes(): DataStore {
+//   const store = buildIndexes();
+//   applyPatches(store, patches);
+//   return store;
+// }
+
+function applyPatches(store: DataStore, patches: Patch[]) {
+  for (const patch of patches) {
+    const {type, id, fields} = patch;
+    if (!(type in store)) {
+      throw new Error(`Unknown type: ${type}`);
+    }
+    const index = store[type];
+    if (!(id in index)) {
+      throw new Error(`Unknown id: ${type}(${id})`);
+    }
+      const record = index[id];
+      record.fields = {...record.fields, ...fields};
+  }
 }

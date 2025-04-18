@@ -3,6 +3,10 @@
 // npx tsx src/test.ts
 
 Top
+* Transition visual - fade to white
+* Initial context should be JSON field
+* Factor JSON from LLMField
+* Is it possible to rely on useFormContext() instead of useEditorContext()?
 * New run button should create a job
 * Integrate RecordEditor into Editor framework 
 * Editors should provide instructions
