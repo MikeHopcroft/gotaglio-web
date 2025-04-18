@@ -3,31 +3,33 @@
 // npx tsx src/test.ts
 
 Top
-* Consider renaming /frame route segment
-* Editors
-  * x Remove RecordEditor
-  * x Replace Editor with Editor2. Rename Editor2 to Editor.
-  * x Migrate all editors to new model
-  * Transition visual - fade to white
-  * x Is it possible to rely on useFormContext() instead of useEditorContext()?
-  * x Remove EditorProvider
-  * Textarea initial rows based on number of lines?
-* Initial context should be JSON field
-* Factor JSON from LLMField
-* New run button should create a job
-* Are sessions immutable after creation?
-* Editors should provide instructions
-  * x group property - displays intructions for grouping nodes
-  * x Markdown display
-  * . Ability to display special symbols (create button, delete button)
-* Fast refresh warning for useRouteData() hook
+* Transition visual - fade to white
 * Create
+  * How does async route navigation work?
+    * Can't navigate until record is created.
   * Needs to navigate to new record
 * Delete
   * x Button in upper right
   * . Editor.tsx should provide delete-record button
   * Hover visuals
   * Navigate to parent node?
+* Consider renaming /frame route segment
+* Initial context should be JSON field
+* Factor JSON from LLMField
+* New-run button should create a job
+* Are sessions immutable after creation?
+* Editors
+  * x Remove RecordEditor
+  * x Replace Editor with Editor2. Rename Editor2 to Editor.
+  * x Migrate all editors to new model
+  * x Is it possible to rely on useFormContext() instead of useEditorContext()?
+  * x Remove EditorProvider
+  * Textarea initial rows based on number of lines?
+* Editors should provide instructions
+  * x group property - displays intructions for grouping nodes
+  * x Markdown display
+  * . Ability to display special symbols (create button, delete button)
+* Fast refresh warning for useRouteData() hook
 * x JSON validation error prevents editing in LLMField
 * x Integrate RecordEditor into Editor framework 
 * x Remove DebugPane
