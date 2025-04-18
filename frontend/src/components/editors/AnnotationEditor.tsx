@@ -1,5 +1,5 @@
 import React from 'react';
-import type {Path} from 'react-hook-form';
+import {Path, useFormContext} from 'react-hook-form';
 
 import type {FormFields} from '../../dataModel';
 
@@ -7,7 +7,6 @@ import Instructions from '../Instructions';
 import Markdown from '../Markdown';
 
 import Editor from './Editor';
-import {useEditorContext} from './EditorProvider';
 
 const text = `
 ## Annotations
@@ -46,7 +45,7 @@ function AnnotationsEditor({group = false}) {
 }
 
 function AnnotationEditorFields<FORM extends FormFields>() {
-  const {control} = useEditorContext<FORM>();
+  const {register} = useFormContext()
   return (
     <>
       <h1 className="h1">Annotation Editor</h1>
@@ -55,7 +54,7 @@ function AnnotationEditorFields<FORM extends FormFields>() {
         <div className="flex-1">
           <textarea
             className="border px-2 py-1 rounded w-full m-0"
-            {...control.register('name' as Path<FORM>)}
+            {...register('name' as Path<FORM>)}
             placeholder="Name"
             rows={3}
           />
@@ -69,7 +68,7 @@ function AnnotationEditorFields<FORM extends FormFields>() {
         <div className="flex-1">
           <textarea
             className="border px-2 py-1 rounded w-full m-0"
-            {...control.register('description' as Path<FORM>)}
+            {...register('description' as Path<FORM>)}
             placeholder="Description"
             rows={3}
           />
@@ -83,7 +82,7 @@ function AnnotationEditorFields<FORM extends FormFields>() {
         <div className="flex-1">
           <textarea
             className="border px-2 py-1 rounded w-full m-0"
-            {...control.register('instructions' as Path<FORM>)}
+            {...register('instructions' as Path<FORM>)}
             placeholder="Instructions"
             rows={3}
           />
@@ -97,7 +96,7 @@ function AnnotationEditorFields<FORM extends FormFields>() {
         <div className="flex-1">
           <textarea
             className="border px-2 py-1 rounded w-full m-0"
-            {...control.register('template' as Path<FORM>)}
+            {...register('template' as Path<FORM>)}
             placeholder="Template"
             rows={3}
           />

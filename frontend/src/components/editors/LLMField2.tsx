@@ -12,8 +12,6 @@ import {
   useFormContext,
 } from 'react-hook-form';
 
-import {useEditorContext} from './EditorProvider';
-
 type LLMFieldProps<FormValues extends FieldValues> = {
   path: Path<FormValues>;
 };
@@ -25,12 +23,11 @@ export default function LLMField2<FormValues extends FieldValues>({
 
   const {
     clearErrors,
+    control,
     formState: {errors},
-    register,
     setError,
     setValue,
   } = useFormContext<FormValues>();
-  const {control} = useEditorContext<FormValues>();
 
   const error = get(errors, path);
 
@@ -92,6 +89,7 @@ export default function LLMField2<FormValues extends FieldValues>({
                     } catch (err) {
                       // Ignore parse error here – you can handle it with validation if desired
                       console.log(`LLMField2: Invalid JSON`, err);
+                      onChange(e.target.value);
                     }
                   }}
                   onBlur={onBlur}

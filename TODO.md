@@ -3,13 +3,15 @@
 // npx tsx src/test.ts
 
 Top
+* JSON validation error prevents editing in LLMField
 * Consider renaming /frame route segment
 * Editors
   * x Remove RecordEditor
   * x Replace Editor with Editor2. Rename Editor2 to Editor.
   * x Migrate all editors to new model
   * Transition visual - fade to white
-  * Is it possible to rely on useFormContext() instead of useEditorContext()?
+  * x Is it possible to rely on useFormContext() instead of useEditorContext()?
+  * x Remove EditorProvider
   * Textarea initial rows based on number of lines?
 * Initial context should be JSON field
 * Factor JSON from LLMField

@@ -1,15 +1,11 @@
-import {
-  TrashIcon,
-} from '@heroicons/react/24/solid';
-import React, { useEffect } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
-import type { DefaultValues } from 'react-hook-form';
+import {TrashIcon} from '@heroicons/react/24/solid';
+import React, {useEffect} from 'react';
+import {useForm, FormProvider} from 'react-hook-form';
+import {useLocation} from 'react-router-dom';
+import type {DefaultValues} from 'react-hook-form';
 
-import type { AnyRecord, FormFields } from '../../dataModel';
-import { useRouteData } from '../RouteDataProvider';
-
-import EditorProvider from './EditorProvider';
+import type {AnyRecord, FormFields} from '../../dataModel';
+import {useRouteData} from '../RouteDataProvider';
 
 type EditorProps<FORM extends FormFields> = {
   defaultValues: DefaultValues<FORM>;
@@ -20,13 +16,13 @@ function Editor<FORM extends FormFields>({
   defaultValues,
   children,
 }: EditorProps<FORM>) {
-  const { data, isLoading, error, update } = useRouteData();
+  const {data, isLoading, error, update} = useRouteData();
   const location = useLocation();
 
   const methods = useForm<FORM>({
     defaultValues,
   });
-  const { handleSubmit, reset } = methods;
+  const {handleSubmit, reset} = methods;
 
   // Load data from useRouteData
   useEffect(() => {
@@ -96,9 +92,7 @@ function Editor<FORM extends FormFields>({
             onSubmit={handleSubmit(onSubmit)}
             className="p-4 max-w-5xl mx-auto space-y-4"
           >
-            <EditorProvider formMethods={methods}>
-              {children}
-            </EditorProvider>
+            {children}
             <button
               type="submit"
               className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"

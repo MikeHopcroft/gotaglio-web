@@ -4,7 +4,7 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/solid';
 import React from 'react';
-import {Path, useFieldArray} from 'react-hook-form';
+import {Path, useFieldArray, useFormContext} from 'react-hook-form';
 
 import type {Case} from '../../dataModel';
 
@@ -13,7 +13,6 @@ import Markdown from '../Markdown';
 import {useRouteData} from '../RouteDataProvider';
 
 import Editor from './Editor';
-import {useEditorContext} from './EditorProvider';
 import KeywordsField from './KeywordsField';
 import LLMField2 from './LLMField2';
 
@@ -53,7 +52,7 @@ function CaseEditor({group = false}) {
 }
 
 function CaseEditorFields() {
-  const {control} = useEditorContext<FormValues>();
+  const {control} = useFormContext<FormValues>()
   const {fields, append, remove} = useFieldArray<FormValues>({
     control,
     name: 'turns',
