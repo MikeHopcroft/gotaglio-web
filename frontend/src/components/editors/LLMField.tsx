@@ -16,7 +16,7 @@ type LLMFieldProps<FormValues extends FieldValues> = {
   path: Path<FormValues>;
 };
 
-export default function LLMField2<FormValues extends FieldValues>({
+function LLMField<FormValues extends FieldValues>({
   path,
 }: LLMFieldProps<FormValues>) {
   const [loading, setLoading] = React.useState(false);
@@ -150,3 +150,5 @@ export default function LLMField2<FormValues extends FieldValues>({
     </>
   );
 }
+
+export default LLMField;

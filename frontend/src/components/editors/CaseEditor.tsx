@@ -14,7 +14,7 @@ import {useRouteData} from '../RouteDataProvider';
 
 import Editor from './Editor';
 import KeywordsField from './KeywordsField';
-import LLMField2 from './LLMField2';
+import LLMField from './LLMField';
 
 type FormValues = Case['fields'];
 
@@ -137,7 +137,7 @@ function CaseEditorFields() {
             <div className="w-[100px] shrink-0" />
           </div>
           {/* Response section */}
-          <LLMField2<FormValues> path={`turns.${index}.expected`} />
+          <LLMField<FormValues> path={`turns.${index}.expected`} />
         </div>
       ))}
 
