@@ -3,9 +3,10 @@
 // npx tsx src/test.ts
 
 Top
+* Consider renaming /frame route segment
 * Editors
   * x Remove RecordEditor
-  * . Replace Editor with Editor2
+  * x Replace Editor with Editor2. Rename Editor2 to Editor.
   * x Migrate all editors to new model
   * Transition visual - fade to white
   * Is it possible to rely on useFormContext() instead of useEditorContext()?
@@ -19,7 +20,6 @@ Top
   * x group property - displays intructions for grouping nodes
   * x Markdown display
   * . Ability to display special symbols (create button, delete button)
-* Consider renaming /frame route segment
 * Fast refresh warning for useRouteData() hook
 * Create
   * Needs to navigate to new record

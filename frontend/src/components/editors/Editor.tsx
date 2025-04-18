@@ -16,7 +16,7 @@ type EditorProps<FORM extends FormFields> = {
   children: React.ReactNode; // Now accepts React children instead of a fields function
 };
 
-function Editor2<FORM extends FormFields>({
+function Editor<FORM extends FormFields>({
   defaultValues,
   children,
 }: EditorProps<FORM>) {
@@ -112,4 +112,4 @@ function Editor2<FORM extends FormFields>({
   }
 }
 
-export default Editor2;
+export default Editor;

@@ -12,7 +12,7 @@ import Instructions from '../Instructions';
 import Markdown from '../Markdown';
 import {useRouteData} from '../RouteDataProvider';
 
-import Editor2 from './Editor2';
+import Editor from './Editor';
 import {useEditorContext} from './EditorProvider';
 import KeywordsField from './KeywordsField';
 import LLMField2 from './LLMField2';
@@ -38,7 +38,7 @@ function CaseEditor({group = false}) {
     );
   } else {
     return (
-      <Editor2
+      <Editor
         defaultValues={{
           name: '',
           description: '',
@@ -47,7 +47,7 @@ function CaseEditor({group = false}) {
         }}
       >
         <CaseEditorFields />
-      </Editor2>
+      </Editor>
     );
   }
 }

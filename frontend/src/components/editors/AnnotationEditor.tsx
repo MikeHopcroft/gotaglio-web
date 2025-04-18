@@ -6,7 +6,7 @@ import type {FormFields} from '../../dataModel';
 import Instructions from '../Instructions';
 import Markdown from '../Markdown';
 
-import Editor2 from './Editor2';
+import Editor from './Editor';
 import {useEditorContext} from './EditorProvider';
 
 const text = `
@@ -31,7 +31,7 @@ function AnnotationsEditor({group = false}) {
     );
   } else {
     return (
-      <Editor2
+      <Editor
         defaultValues={{
           name: '',
           description: '',
@@ -40,7 +40,7 @@ function AnnotationsEditor({group = false}) {
         }}
       >
         <AnnotationEditorFields />
-      </Editor2>
+      </Editor>
     );
   }
 }
