@@ -22,7 +22,7 @@ export default function KeywordsField({path}: {path: string}) {
                   field.onChange(selected.map(opt => opt.value));
                 }}
                 onBlur={field.onBlur}
-                options={['abc', 'def', 'ghi'].map(tag => ({
+                options={['multistep', 'p0', 'p1', 'investigate'].map(tag => ({
                   label: tag,
                   value: tag,
                 }))}

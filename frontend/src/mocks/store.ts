@@ -253,6 +253,7 @@ const patches: Patch[] = [
     id: 1,
     fields: {
       description: 'Simple burger order',
+      keywords: ['p0'],
       turns: [
         {
           query: "can I a double wiseguy with no tomatoes and extra mayo",
@@ -283,7 +284,7 @@ const patches: Patch[] = [
     id: 2,
     fields: {
       description: 'Multistep burger order',
-      keywords: ['multistep'],
+      keywords: ['multistep', 'p1'],
       turns: [
         {
           query: "can I a double wiseguy with no tomatoes and extra mayo",
@@ -330,7 +331,38 @@ const patches: Patch[] = [
   
       ]
     }
-  }
+  },
+  {
+    type: 'cases',
+    id: 5,
+    fields: {
+      description: 'LLM produces bogus JSON',
+      keywords: ['investiage'],
+      turns: [
+        {
+          query: "dude what's up. eighty size the tomatoes",
+          expected: {
+            "items": [
+              {
+                "name": "Double Wiseguy",
+                "type": "CHOOSE",
+                "options": [
+                  {
+                    "amount": "No",
+                    "name": "Tomato"
+                  },
+                  {
+                    "amount": "Extra",
+                    "name": "Mayo"
+                  }
+                ]
+              }
+            ]
+          },
+        }
+      ]
+    }
+  },
 
 ];
 
