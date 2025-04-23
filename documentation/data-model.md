@@ -1,6 +1,129 @@
 # GoTaglio Data Model
 
+## The Four Entity Type
 
+The GoTaglio data model consists of just four entity types. They are the _case_, _suite_, _experiment_, and _run_.
+
+### Case
+The _case_ is the central data record type in GoTaglio. While its name is meant to evoke the concept of a "test case", containing system inputs and expected outputs, it can also be used to hold user annotations fields such as priority levels and quality judgements, and it can store data like the output of an LLM or a record read from a CSV file.
+
+Cases are made up of a combination of mutable and immutable fields. Typically fields like a title or description are mutable, while semantic fields like input values and observed outputs are immutable. In GoTaglio, immutability is achieved by setting the primary key of a record to be the BLAKE2b hash of its immutable fields.
+
+Cases maintain a provenance chain by storing the id of the unedited version in the `previous` field. The `previous` field can be null if the case is the first instance.
+
+All cases are the output of some _run_. The id of the run associated with the creation of a case is stored in the case's `creator` field. 
+
+In many scenarios, the _run_ produces each output case by transforming an input case. An example _run_ might pull a user prompt from an input case, feed it to an LLM and record the inferred response in the output case. A run might also be embodied by an interactive web app that prompts human judges to supply labels for input cases. In these scenarios, the `basis` field will be set to the id of the input case.
+
+In some scenarios, there are no input case. An example would be a run that creates cases from rows in a CSV file. In this situation, the `basis field` will be null.
+
+Note that the four hash fields - the `id`, `previous`, `basis`, and `creator` fields are managed by GoTaglio and cannot be edited directly. Once a _case_ has been committed to the database, its `basis` and `creator` fields will never change, and all future versions derived by edits to the `immutable_fields` will share the same `basis` and `creator` values. The `id` is always the hash of the `immutable_fields`, including `previous`, `basis`, and `creator`. When the `id` field changes, the `previous` field is updated to the previous `id` value.
+
+The rationale for _case_ immutability is that _cases_ are essential for replicating and analyzing _runs_.
+
+```mermaid
+erDiagram
+    CASE {
+      hash id
+      hash previous
+      hash basis
+      hash creator
+      json mutable_fields
+      json immutable_fields
+    }
+```
+
+### Suite
+
+A _suite_ represents a collection of _cases_. The relationship between `suites` and `cases` is many-to-many, so the same _case_ can appear in multiple _suites_.
+
+_Suites_ are mutable, however, when a _case_ is edited, producing a new case, the suite-case relation is updated to replace the original _case_ with the updated _case_. The primary key for a _suite_ is a UUID v4. This was chosen
+to facilitate sharing of suites across databases. It is expected that databases will be formed and reformed over the course of a project.
+
+_Suites_ are used to specify the set of _cases_ used as an input to a _run_.
+Because the _run_ stores the input _case_ ids in the _basis_ field of each output case, there is no need for _suites_ to be immutable. When comparing the results of two _runs_ it is important ensure the two _runs_ are based on identical sets of input cases.
+
+Another rationale for _suite_ mutability is that the _case_ list is stored in a junction table that would be impractical to make immutable.
+
+```mermaid
+erDiagram
+    SUITE {
+      uuid id
+      json mutable_fields
+    }
+```
+
+### Experiment
+
+An _experiment_ defines a class of function from (Case[], Config) to Case[]. Note the following:
+* The types of all of the input cases are the same. In other words, all of the input _cases_ share the same schemas for their mutable and immutable fields.
+* The type of all of the output cases is the same.
+* The type of the output case is almost never the type of the input case. The _experiment_ usually exists to add new information, such as annotations and LLM outputs.
+* While in many cases, there is a one-to-one correspondance between input and output cases, this is not always true. For example, a CSV file importer might take an empty input array and produce one output case for each row in the file. Another scenario would be an LLM-based test case generator.
+
+Typically the class of functions is specified with a name. The specific function version and configuration parameters are the passed to the corresponding function instance.
+
+_Experiments_ are immutable, using the same mechanism as was used for _cases_.
+The rationale for immutability is that the _experiment_ is critical for reproducing and analyzing a _run_.
+
+Note that edits to _experiments_ that result in an `id` change do not cause updates to references in `runs`.
+
+Note also that the _experiment_ doesn't store the `id` of an associated _suite_. This is because an experiment may be run on multiple different _suites_.
+
+```mermaid
+erDiagram
+    EXPERIMENT {
+      hash id
+      hash previous
+      json mutable_fields
+      json immutable_fields
+    }
+```
+
+### Run
+The _run_ documents all of the inputs, outputs, and configuration data necessary to replicate and analyze the _run_. _Runs_ are completely immutable and they don't provide a mechanism like the one in _case_ for generating a variant with a new `id`.
+
+There are two rationale for complete immutability in runs. The first is that they are computer generated and therefore contain no fields with errors that require later fixup. The second is that the goal of the `run` is to document an exact process as a point in time.
+
+The outputs of a _run_ are _cases_ with their `creator` field set to the `id` of the _run_. The _case_ inputs of a _run_ can be recoverd from the `basis` fields of each of the output cases.
+
+Note that that _run_ stores the `id` of the _suite_ to document the intent of the run. When reproducing a run, the user should take special care in choosing the desired input _cases_. The _cases_ recovered from the `basis` fields of the output _cases_ are the exact set of _cases_ used in the run. This is likely appropriate in most situations. Less frequently, it may be determined that an original input case is no longer valid and should be removed from the `suite` and all future runs.
+
+Note that one can effectively compare _runs_ where the _suite_ contents has drifted over time by examining only those _cases_ whose `basis` values appear in both the old and the new runs.
+
+```mermaid
+erDiagram
+    INPUT_CASE ||--|| OUTPUT_CASE : based_on
+    RUN ||--o{ OUTPUT_CASE : creates
+    RUN {
+      hash id
+      hash experiment
+      hash suite
+      json config
+    }
+    INPUT_CASE {
+      hash id
+      hash previous
+      hash basis
+      hash creator
+      json mutable_fields
+      json immutable_fields
+    }
+    OUTPUT_CASE {
+      hash id
+      hash previous
+      hash basis
+      hash creator
+      json mutable_fields
+      json immutable_fields
+    }
+```
+
+### A word on polymorphismm
+
+It is important to understand that records in the _case_ table may have different schemas. _Cases_ with identical `creater` values all have the same schema because they all come from the same _run_. _Cases_ whose creator's _experiment_ values are the same also have the same schema because they come from the same class of function defined in a single _experiment_.
+
+# DEPRECATED CONTENT BEYOND THIS POINT
 ## The four Entity Types
 
 The GoTaglio data model consists of just four entity types. They are the _experiment_, _run_, _result_, and _case_.
@@ -24,7 +147,7 @@ A _run_ documents the specific configuration details and the _results_ of conduc
 
 Each _run_ is associated with a specific _experiment_ and a collection of *results*.
 
-In theory, the run contains sufficient information to allow one to replicate the experiment. This includes configuration details and the set of immutable input cases.
+In theory, the _run_ contains sufficient information to allow one to replicate the experiment. This includes configuration details and the set of immutable input cases.
 
 ### Result
 The output of a *run* is a set of _results_, where each result is associated with at most one _case_. One can think of a _result_ as the return value of a function, defined by the _experiment_, which takes a _case_ as input.
@@ -109,3 +232,37 @@ The provenance field allows us to track the chain of edits, and a simple record 
 ## Open Questions
 
 * _runs_ certainly store the primary keys of the _cases_ they are based on, but who stores sets of _cases_? We might call a set of cases a _suite_. Is this a fifth entity type? We probably don't want the _experiment_ to maintain the suite internally. The reason is that we'd like to run the same _experiment_ on different suites. We could accept a _run_ maintaining the suite internally, and use a utility funtion to rerun the _run_ with the same suite or a new one. One argument for suites as first class citizens is that we can attach useful metadata about the purpose of the suites and we can use the suite's primary key in queries about performance of the suite across time, model versions, etc.
+
+```mermaid
+erDiagram
+    SUITE }o--o{ CASE : contains
+    EXPERIMENT ||--o{ RUN : creates
+    RUN ||--o{ CASE : produces
+    RUN ||--|| SUITE : reads
+    CASE ||--o{ CASE : derived_from
+    CASE ||--o{ CASE : previous
+    SUITE {
+      hash id
+      hash previous
+      json fields
+    }
+    CASE {
+      hash id
+      hash previous
+      hash basis
+      hash creator
+      json fields
+    }
+    EXPERIMENT {
+      hash id
+      hash previous
+      hash suite
+      json fields
+    }
+    RUN {
+      hash id
+      hash previous
+      hash experiment
+      json fields
+    }
+```
