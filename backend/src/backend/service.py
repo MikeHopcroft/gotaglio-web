@@ -1,13 +1,5 @@
-# import os
-# import sys
-
-# # Add the parent directory to the sys.path so that we can import from the
-# # gotaglio package, as if it had been installed.
-# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 # From gotaglio-web/backend, run with python -m src.backend.service
 
-# service.py
 from hashlib import blake2b
 import json
 from sqlalchemy import create_engine
@@ -17,7 +9,7 @@ from .schemas import CaseCreate, CaseRead
 from typing import List, Optional
 
 
-def compute_hash(immutable_fields: dict, previous: Optional[str], basis: Optional[str], creator: str) -> str:
+def compute_hash(immutable_fields: dict, previous: str | None, basis: str | None, creator: str) -> str:
     h = blake2b(digest_size=32)
     combined = {
         "immutable_fields": immutable_fields,
@@ -35,23 +27,18 @@ class CaseService:
     def upsert_case(self, case_data: CaseCreate) -> Case:
         return self.upsert_batch([case_data])[0]
 
-# service.py (continued)
-
     def upsert_batch(self, case_data_list: List[CaseCreate]) -> List[Case]:
-        # 1. Collect all needed `previous` IDs
+        # Preload all required previous cases
         prev_ids = {c.previous for c in case_data_list if c.previous}
         prev_map = {}
         if prev_ids:
             prev_cases = self.db.query(Case).filter(Case.id.in_(prev_ids)).all()
             prev_map = {case.id: case for case in prev_cases}
 
-        inserted_cases = []
+        inserted_cases: List[Case] = []
 
         for data in case_data_list:
             prev = prev_map.get(data.previous)
-            if data.previous and not prev:
-                raise ValueError(f"Previous case {data.previous} not found")
-
             sequence = (prev.sequence + 1) if prev else 1
 
             new_id = compute_hash(
@@ -60,7 +47,6 @@ class CaseService:
                 data.basis,
                 data.creator,
             )
-
             # NOTE:
             # In the vanishingly rare event of a BLAKE2b collision,
             # this code would insert a new record whose content differs from
@@ -77,24 +63,22 @@ class CaseService:
             # This check is omitted in production for performance and simplicity.
 
 
-            # existing = self.db.query(Case).get(new_id) # 🚨 deprecated
-            existing = self.db.get(Case, new_id)  # ✅ modern SQLAlchemy 2.0 syntax
+            existing = self.db.get(Case, new_id)
             if existing:
                 inserted_cases.append(existing)
                 continue
 
-            case = Case(
+            new_case = Case(
                 id=new_id,
                 previous=data.previous,
-                sequence=sequence,
                 basis=data.basis,
                 creator=data.creator,
+                sequence=sequence,
                 mutable_fields=data.mutable_fields,
                 immutable_fields=data.immutable_fields,
             )
-
-            self.db.add(case)
-            inserted_cases.append(case)
+            self.db.add(new_case)
+            inserted_cases.append(new_case)
 
         self.db.commit()
         for case in inserted_cases:
