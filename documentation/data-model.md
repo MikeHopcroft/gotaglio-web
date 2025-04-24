@@ -139,7 +139,7 @@ At the database level, the GoTaglio data model consists of just four entity type
 
 The _case_ is the central data record type in GoTaglio. While its name is meant to evoke the concept of a "test case", containing inputs and expected outputs, it can also be used to hold user annotation fields such as priority levels and quality judgements It can also store data like a record read from a CSV file or the output of an LLM.
 
-Cases are made up of a combination of mutable and immutable fields. Typically fields like a title or description are mutable, while semantic fields like input values and observed outputs are immutable. In GoTaglio, immutability is achieved by setting the primary key of a record to be the [BLAKE2b](<https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2>) hash of its immutable fields.
+Cases are made up of a combination of mutable and immutable fields. Typically fields like a title or description are mutable, while semantic fields like input values and observed outputs are immutable. In GoTaglio, immutability is achieved by setting the primary key of a record to be the [BLAKE2b](<https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2>) hash of its immutable fields. This approach is sometimes called [Content Addressable Storage](https://en.wikipedia.org/wiki/Content-addressable_storage).
 
 _Cases_ maintain a provenance chain by storing the id of the unedited version in the `previous` field. The `previous` field can be null if the _case_ is the first instance.
 
