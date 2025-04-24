@@ -172,11 +172,11 @@ erDiagram
 
 A _suite_ represents a collection of _cases_. The relationship between _suites_ and _cases_ is many-to-many, so the same _case_ can appear in multiple _suites_.
 
-_Suites_ are mutable, however, when a _case_ is edited, producing a new case, the _suite-case_ relation is updated to replace the original _case_ with the updated _case_. The primary key for a _suite_ is a UUID v4. This was chosen
+_Suites_ are mutable. When a _case_ is edited, producing a new _case_ version, the _suite-case_ relation is updated to replace the original _case_ with the updated _case_. The primary key for a _suite_ is a UUID v4. This was chosen
 to facilitate sharing of suites across independent databases. It is expected that databases will be formed and reformed over the course of a project, but that _suites_ and _cases_ will be reused. While two _suites_ with the same id are not guaranteed to be identical across databases, the id indicates a common lineage and shared intent.
 
 _Suites_ are used to specify the set of _cases_ used as an input to a _run_.
-Because the _run_ stores the input _case_ ids in the _basis_ field of each output case, there is no need for _suites_ to be immutable. When comparing the results of two _runs_ it is important ensure the two _runs_ are based on identical sets of input cases.
+Because the _run_ stores the input _case_ ids in the _basis_ field of each output case, there is no need for _suites_ to be immutable. When comparing the results of two _runs_ it is important ensure the two _runs_ are based on identical sets of input cases (or that the comparison algorithm can articulate the differences between the inputs).
 
 Another rationale for _suite_ mutability is that the _case_ list is stored in a junction table that would be impractical to make immutable.
 
