@@ -5,17 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Python Debugger: Module",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "backend.service2"
+    },
+    {
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/frontend/src/backends2.ts",
       "preLaunchTask": "tsc: build - frontend/tsconfig.json",
-      "outFiles": [
-        "${workspaceFolder}/frontend/build/**/*.js"
-      ]
+      "outFiles": ["${workspaceFolder}/frontend/build/**/*.js"]
     }
   ]
 }

@@ -7,9 +7,17 @@ class CaseBase(BaseModel):
     immutable_fields: Dict[str, Any]
 
 class CaseCreate(CaseBase):
-    previous: Optional[str]
+    creator: str
     basis: Optional[str]
     creator: str  # Required for new creation
+
+class CaseUpdate(CaseBase):
+    id: str | None  
+
+    class Config:
+        from_attributes = True # ✅ Pydantic v2 equivalent
+        # orm_mode = True # ❌ Deprecated in Pydantic v2
+
 
 class CaseRead(CaseBase):
     id: str
