@@ -1,3 +1,4 @@
+* Rename `service` to `backend` in preparation for making FastAPI service.
 * Test suite for model and service methods
 * FastAPI service
 * Database options: memory or disk
@@ -11,3 +12,4 @@
   * Allow cascading?
 * Transactions?
 * Async database operations?
+* Investigate write through cache
