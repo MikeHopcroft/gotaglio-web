@@ -18,7 +18,7 @@ class Case(Base):
     creator: Mapped[str] = mapped_column(String)  # Could be ForeignKey("runs.id")
     # creator: Mapped[str] = mapped_column(ForeignKey("runs.id"))
     mutable_fields: Mapped[dict] = mapped_column(JSON)
-    immutable_fields: Mapped[dict] = mapped_column(JSON)
+    versioned_fields: Mapped[dict] = mapped_column(JSON)
 
 class Run(Base):
     __tablename__ = "runs"

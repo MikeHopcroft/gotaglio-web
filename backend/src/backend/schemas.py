@@ -4,7 +4,7 @@ from typing import Optional, Dict, Any
 
 class CaseBase(BaseModel):
     mutable_fields: Dict[str, Any]
-    immutable_fields: Dict[str, Any]
+    versioned_fields: Dict[str, Any]
 
 class CaseCreate(CaseBase):
     creator: str
